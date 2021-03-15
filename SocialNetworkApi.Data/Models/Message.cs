@@ -12,7 +12,7 @@ namespace SocialNetworkApi.Data.Models
         public Guid Id { get; set; }
         public User Author { get; set; }
         [Required(ErrorMessage = "Author is required.")]
-        public Guid AuthorId { get; set; }
+        public string AuthorId { get; set; }
         [Required(ErrorMessage = "Text is required.")]
         [StringLength(2000, ErrorMessage = "Max message length is 2000 characters.")]
         public string Text { get; set; }

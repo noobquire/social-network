@@ -12,7 +12,7 @@ namespace SocialNetworkApi.Data.Models
         public Guid Id { get; set; }
         public User Author { get; set; }
         [Required(ErrorMessage = "Author is required")]
-        public Guid AuthorId { get; set; }
+        public string AuthorId { get; set; }
         public Profile Profile { get; set; }
         [Required(ErrorMessage = "Profile is required")]
         public Guid ProfileId { get; set; }

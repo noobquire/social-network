@@ -8,7 +8,7 @@ namespace SocialNetworkApi.Data.Models
     public class UserChat
     {
         public User User { get; set; }
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public Chat Chat { get; set; }
         public Guid ChatId { get; set; }
     }
