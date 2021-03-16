@@ -6,10 +6,8 @@ namespace SocialNetworkApi.Data.Models
     /// <summary>
     /// Represents a post in user's profile.
     /// </summary>
-    public class Post
+    public class Post : Entity
     {
-        [Key]
-        public Guid Id { get; set; }
         public User Author { get; set; }
         [Required(ErrorMessage = "Author is required")]
         public string AuthorId { get; set; }

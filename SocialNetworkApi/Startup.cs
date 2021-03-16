@@ -10,6 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection.Repositories;
+using Microsoft.EntityFrameworkCore;
+using SocialNetworkApi.Data;
+using SocialNetworkApi.Data.Interfaces;
+using SocialNetworkApi.Data.Models;
+using SocialNetworkApi.Data.Repositories;
 
 namespace SocialNetworkApi
 {
@@ -26,6 +32,16 @@ namespace SocialNetworkApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<SocialNetworkDbContext>(
+                options => options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IRepository<User>, UserRepository>();
+            services.AddScoped<IRepository<Profile>, ProfileRepository>();
+            services.AddScoped<IRepository<Post>, PostRepository>();
+            services.AddScoped<IRepository<Chat>, ChatRepository>();
+            services.AddScoped<IRepository<Message>, MessageRepository>();
+            services.AddScoped<IRepository<Image>, ImageRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

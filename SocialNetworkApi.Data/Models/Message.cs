@@ -6,10 +6,8 @@ namespace SocialNetworkApi.Data.Models
     /// <summary>
     /// Represents a message sent to chat.
     /// </summary>
-    public class Message
+    public class Message : Entity
     {
-        [Key]
-        public Guid Id { get; set; }
         public User Author { get; set; }
         [Required(ErrorMessage = "Author is required.")]
         public string AuthorId { get; set; }

@@ -6,10 +6,8 @@ namespace SocialNetworkApi.Data.Models
     /// <summary>
     /// Represents image data.
     /// </summary>
-    public class Image
+    public class Image : Entity
     {
-        [Key]
-        public Guid Id { get; set; }
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(100, ErrorMessage = "Name length can be no more than 50 characters.")]
         public string Name { get; set; }
