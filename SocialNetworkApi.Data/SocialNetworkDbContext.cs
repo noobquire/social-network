@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Data.Models;
 
@@ -10,9 +7,8 @@ namespace SocialNetworkApi.Data
     public class SocialNetworkDbContext : IdentityDbContext<User>
     {
 
-        public SocialNetworkDbContext() : base()
+        public SocialNetworkDbContext(DbContextOptions<SocialNetworkDbContext> options) : base(options)
         {
-            
         }
 
         public DbSet<Profile> Profiles { get; set; }
@@ -20,12 +16,6 @@ namespace SocialNetworkApi.Data
         public DbSet<Image> Images { get; set; }
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=SocialNetwork;Integrated Security=True");
-            base.OnConfiguring(optionsBuilder);
-        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

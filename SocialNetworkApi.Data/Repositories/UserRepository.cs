@@ -8,11 +8,11 @@ using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Data.Repositories
 {
-    public abstract class UserRepository : IRepository<User>
+    public class UserRepository : IRepository<User>
     {
         private readonly SocialNetworkDbContext _context;
 
-        protected UserRepository(SocialNetworkDbContext context)
+        public UserRepository(SocialNetworkDbContext context)
         {
             _context = context;
         }
