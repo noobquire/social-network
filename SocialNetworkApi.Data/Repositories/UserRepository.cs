@@ -8,33 +8,33 @@ using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Data.Repositories
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
+    public abstract class UserRepository : IRepository<User>
     {
         private readonly SocialNetworkDbContext _context;
 
-        protected Repository(SocialNetworkDbContext context)
+        protected UserRepository(SocialNetworkDbContext context)
         {
             _context = context;
         }
 
-        public async Task<TEntity> GetByIdAsync(string id)
+        public async Task<User> GetByIdAsync(string id)
         {
             return await _context
-                .Set<TEntity>()
+                .Set<User>()
                 .FirstOrDefaultAsync(e => e.Id.ToString() == id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _context
-                .Set<TEntity>()
+                .Set<User>()
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> QueryAsync(Func<TEntity, bool> predicate)
+        public async Task<IEnumerable<User>> QueryAsync(Func<User, bool> predicate)
         {
             return (await _context
-                    .Set<TEntity>()
+                    .Set<User>()
                     .ToListAsync())
                 .Where(predicate);
         }
@@ -58,9 +58,9 @@ namespace SocialNetworkApi.Data.Repositories
             }
         }
 
-        public async Task<bool> UpdateAsync(TEntity entity)
+        public async Task<bool> UpdateAsync(User entity)
         {
-            var dbEntity = await GetByIdAsync(entity.Id.ToString());
+            var dbEntity = await GetByIdAsync(entity.Id);
             if (dbEntity == null)
             {
                 return false;
@@ -70,7 +70,7 @@ namespace SocialNetworkApi.Data.Repositories
             return true;
         }
 
-        public async Task<bool> CreateAsync(TEntity entity)
+        public async Task<bool> CreateAsync(User entity)
         {
             await _context.AddAsync(entity);
             await _context.SaveChangesAsync();

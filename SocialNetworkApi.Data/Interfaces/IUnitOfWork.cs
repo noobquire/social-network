@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using SocialNetworkApi.Data.Models;
+﻿using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Data.Interfaces
 {
@@ -10,5 +9,6 @@ namespace SocialNetworkApi.Data.Interfaces
         IRepository<Image> Images { get; }
         IRepository<Message> Messages { get; }
         IRepository<Profile> Profiles { get; }
+        IRepository<User> Users { get; }
     }
 }
