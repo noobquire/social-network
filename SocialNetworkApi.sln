@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{D578E3DD-A36
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A4077142-AFC5-4B0D-A09F-3ADC05740687}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Logic", "SocialNetworkApi.Logic\SocialNetworkApi.Logic.csproj", "{1102368E-97EA-4582-8DC1-A364794AE6EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Services", "SocialNetworkApi.Logic\SocialNetworkApi.Services.csproj", "{1102368E-97EA-4582-8DC1-A364794AE6EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi", "SocialNetworkApi\SocialNetworkApi.csproj", "{8CAA7979-3FD3-4386-88FE-9920D347EE78}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Data", "So
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.IntegrationTests", "SocialNetworkApi.IntegrationTests\SocialNetworkApi.IntegrationTests.csproj", "{F07710D4-5E8D-4E70-ABFD-6B83EFA9CD62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Logic.Tests", "SocialNetworkApi.Logic.Tests\SocialNetworkApi.Logic.Tests.csproj", "{3AD6997C-F582-4DE3-B4A5-65DC360D7B14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Services.Tests", "SocialNetworkApi.Logic.Tests\SocialNetworkApi.Services.Tests.csproj", "{3AD6997C-F582-4DE3-B4A5-65DC360D7B14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

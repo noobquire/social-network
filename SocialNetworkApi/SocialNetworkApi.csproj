@@ -1,15 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocialNetworkApi.Data\SocialNetworkApi.Data.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.13" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\SocialNetworkApi.Data\SocialNetworkApi.Data.csproj" />
+    <ProjectReference Include="..\SocialNetworkApi.Logic\SocialNetworkApi.Services.csproj" />
   </ItemGroup>
 
 
