@@ -38,13 +38,13 @@ namespace SocialNetworkApi.Controllers
             try
             {
                 var result = await _usersService.RegisterAsync(registerModel);
-                if (!result.Succeeded)
+                if (result.Succeeded)
                 {
-                    var message = string.Join(" ", result.Errors.Select(e => e.Description));
-                    var error = new ApiError(message, HttpStatusCode.BadRequest);
-                    return BadRequest(error);
+                    return Ok();
                 }
-                return Ok();
+                var message = string.Join(" ", result.Errors.Select(e => e.Description));
+                var error = new ApiError(message, HttpStatusCode.BadRequest);
+                return BadRequest(error);
             }
             catch (UserAlreadyExistsException userExistsEx)
             {

@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Models.Dtos;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace SocialNetworkApi.Services.Implementations
@@ -18,13 +19,11 @@ namespace SocialNetworkApi.Services.Implementations
     public class UsersService : IUsersService
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public UsersService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public UsersService(UserManager<User> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
         }
 
@@ -90,6 +89,44 @@ namespace SocialNetworkApi.Services.Implementations
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 ExpirationTime = token.ValidTo
             };
+        }
+
+        public async Task<UserDto> GetByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+            // TODO: Use AutoMapper
+            var dto = new UserDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.UserName,
+                Email = user.Email,
+            };
+            return dto;
+        }
+
+        public async Task<UserDto> GetByEmailAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return null;
+            }
+            // TODO: Use AutoMapper
+            var dto = new UserDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.UserName,
+                Email = user.Email,
+            };
+            return dto;
         }
     }
 }

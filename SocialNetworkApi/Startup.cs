@@ -1,18 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +16,7 @@ using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Data.Repositories;
 using SocialNetworkApi.Services.Implementations;
 using SocialNetworkApi.Services.Interfaces;
+using SocialNetworkApi.Services.Models;
 
 namespace SocialNetworkApi
 {
@@ -96,6 +91,44 @@ namespace SocialNetworkApi
             {
                 endpoints.MapControllers();
             });
+
+            CreateAdminUser(app.ApplicationServices).Wait();
+        }
+
+        private async Task CreateAdminUser(IServiceProvider serviceProvider)
+        {
+            using var scope = serviceProvider.CreateScope();
+            var provider = scope.ServiceProvider;
+            var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
+            var usersService = provider.GetRequiredService<IUsersService>();
+            var userManager = provider.GetRequiredService<UserManager<User>>();
+
+            var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
+            if (!adminRoleExists)
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            var existingUser = await usersService.GetByEmailAsync(Configuration["Admin:Email"]);
+            if (existingUser == null)
+            {
+                var registerAdmin = new UserRegisterModel()
+                {
+                    FirstName = Configuration["Admin:FirstName"],
+                    LastName = Configuration["Admin:LastName"],
+                    Email = Configuration["Admin:Email"],
+                    Password = Configuration["Admin:Password"],
+                    Username = Configuration["Admin:Username"]
+                };
+
+                await usersService.RegisterAsync(registerAdmin);
+            }
+
+            var userToMakeAdmin = await userManager.FindByEmailAsync(Configuration["Admin:Email"]);
+            if (!await userManager.IsInRoleAsync(userToMakeAdmin, "Admin"))
+            {
+                await userManager.AddToRoleAsync(userToMakeAdmin, "Admin");
+            }
         }
     }
 }
