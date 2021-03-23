@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Data.Interfaces;
-using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Data.Repositories
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
         private readonly SocialNetworkDbContext _context;
 

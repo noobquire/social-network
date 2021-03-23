@@ -101,7 +101,7 @@ namespace SocialNetworkApi.Services.Implementations
             // TODO: Use AutoMapper
             var dto = new UserDto()
             {
-                Id = user.Id,
+                Id = user.Id.ToString(),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Username = user.UserName,
@@ -120,7 +120,7 @@ namespace SocialNetworkApi.Services.Implementations
             // TODO: Use AutoMapper
             var dto = new UserDto()
             {
-                Id = user.Id,
+                Id = user.Id.ToString(),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Username = user.UserName,

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using SocialNetworkApi.Data.Interfaces;
 
 namespace SocialNetworkApi.Data.Models
 {
     /// <summary>
     /// Represents social network user, used for authentication.
     /// </summary>
-    public class User : IdentityUser
+    public class User : IdentityUser<Guid>, IEntity
     {
         [Required(ErrorMessage = "FirstName is required.")]
         [StringLength(50, ErrorMessage = "FirstName length can be no more than 50 characters.")]

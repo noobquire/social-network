@@ -1,13 +1,16 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using SocialNetworkApi.Data.Interfaces;
 
 namespace SocialNetworkApi.Data.Models
 {
     /// <summary>
     /// Represents image data.
     /// </summary>
-    public class Image : Entity
+    public class Image : IEntity
     {
+        [Key]
+        public Guid Id { get; set; }
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(100, ErrorMessage = "Name length can be no more than 50 characters.")]
         public string Name { get; set; }

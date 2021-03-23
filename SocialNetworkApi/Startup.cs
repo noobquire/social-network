@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,7 +46,7 @@ namespace SocialNetworkApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUsersService, UsersService>();
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<SocialNetworkDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -99,14 +100,14 @@ namespace SocialNetworkApi
         {
             using var scope = serviceProvider.CreateScope();
             var provider = scope.ServiceProvider;
-            var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = provider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             var usersService = provider.GetRequiredService<IUsersService>();
             var userManager = provider.GetRequiredService<UserManager<User>>();
 
-            var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
+            var adminRoleExists = await roleManager.Roles.AnyAsync(r => r.Name == "Admin");
             if (!adminRoleExists)
             {
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
             }
 
             var existingUser = await usersService.GetByEmailAsync(Configuration["Admin:Email"]);

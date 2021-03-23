@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Data
 {
-    public class SocialNetworkDbContext : IdentityDbContext<User>
+    public class SocialNetworkDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
-
         public SocialNetworkDbContext(DbContextOptions<SocialNetworkDbContext> options) : base(options)
         {
         }
-
+        
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Image> Images { get; set; }
