@@ -11,6 +11,8 @@ namespace SocialNetworkApi.Data.Models
     {
         [Key]
         public Guid Id { get; set; }
+
+        public bool IsDeleted { get; set; }
         public User Author { get; set; }
         [Required(ErrorMessage = "Author is required")]
         public Guid AuthorId { get; set; }

@@ -11,6 +11,9 @@ namespace SocialNetworkApi.Data.Models
     {
         [Key]
         public Guid Id { get; set; }
+
+        public bool IsDeleted { get; set; }
+
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(100, ErrorMessage = "Name length can be no more than 50 characters.")]
         public string Name { get; set; }

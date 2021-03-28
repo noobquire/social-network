@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetworkApi.Data.Models;
@@ -57,6 +59,10 @@ namespace SocialNetworkApi.Services.Implementations
             }
             var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, loginModel.Password);
             if (!passwordIsCorrect)
+            {
+                return null;
+            }
+            if (user.IsDeleted)
             {
                 return null;
             }
@@ -118,7 +124,7 @@ namespace SocialNetworkApi.Services.Implementations
                 return null;
             }
             // TODO: Use AutoMapper
-            var dto = new UserDto()
+            var dto = new UserDto
             {
                 Id = user.Id.ToString(),
                 FirstName = user.FirstName,
@@ -127,6 +133,49 @@ namespace SocialNetworkApi.Services.Implementations
                 Email = user.Email,
             };
             return dto;
+        }
+
+        public async Task<bool> DeleteByIdAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null || user.IsDeleted)
+            {
+                return false;
+            }
+
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+            return true;
+        }
+
+        public async Task<IEnumerable<UserDto>> GetAllAsync(bool withDeleted = false)
+        {
+            var users = await _userManager.Users.ToListAsync();
+            if (!withDeleted)
+            {
+                users = users.Where(u => !u.IsDeleted).ToList();
+            }
+            return users.Select(user => new UserDto()
+            {
+                Id = user.Id.ToString(),
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.UserName,
+                Email = user.Email,
+            });
+        }
+
+        public async Task<bool> Reinstate(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null || !user.IsDeleted)
+            {
+                return false;
+            }
+            user.IsDeleted = false;
+            await _userManager.UpdateAsync(user);
+            return true;
         }
     }
 }

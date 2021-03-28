@@ -12,6 +12,9 @@ namespace SocialNetworkApi.Data.Models
     {
         [Key]
         public Guid Id { get; set; }
+
+        public bool IsDeleted { get; set; }
+
         [Required(ErrorMessage = "At least two participants are required.")]
         [MinLength(2, ErrorMessage = "At least two participants are required.")]
         [MaxLength(50, ErrorMessage = "No more than 50 participants are allowed.")]

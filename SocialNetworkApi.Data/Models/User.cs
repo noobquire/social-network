@@ -21,5 +21,6 @@ namespace SocialNetworkApi.Data.Models
         public List<UserChat> Chats { get; set; }
         public List<Message> Messages { get; set; }
         public List<Post> Posts { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

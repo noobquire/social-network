@@ -7,5 +7,6 @@ namespace SocialNetworkApi.Data.Interfaces
     {
         [Key]
         Guid Id { get; set; }
+        bool IsDeleted { get; set; }
     }
 }
