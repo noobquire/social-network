@@ -22,11 +22,13 @@ namespace SocialNetworkApi.Services.Implementations
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IProfilesService _profilesService;
 
-        public UsersService(UserManager<User> userManager, IConfiguration configuration)
+        public UsersService(UserManager<User> userManager, IConfiguration configuration, IProfilesService profilesService)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _profilesService = profilesService;
         }
 
         public async Task<IdentityResult> RegisterAsync(UserRegisterModel registerModel)
@@ -46,8 +48,13 @@ namespace SocialNetworkApi.Services.Implementations
                 SecurityStamp = Guid.NewGuid().ToString()
             };
             var result = await _userManager.CreateAsync(newUser, registerModel.Password);
-            return result;
 
+            if (result.Succeeded)
+            {
+                await _profilesService.CreateAsync(newUser.Id.ToString());
+            }
+
+            return result;
         }
 
         public async Task<JwtToken> LoginAsync(LoginModel loginModel)

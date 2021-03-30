@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using SocialNetworkApi.Data.Interfaces;
 
 namespace SocialNetworkApi.Data.Models
@@ -17,7 +18,17 @@ namespace SocialNetworkApi.Data.Models
 
         [StringLength(200, ErrorMessage = "Status length can be no more than 50 characters.")]
         public string Status { get; set; }
+
         public List<Post> Posts { get; set; }
+
+        [ForeignKey("AvatarId")] 
         public Image Avatar { get; set; }
+
+        public Guid? AvatarId { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
+
+        public Guid UserId { get; set; }
     }
 }

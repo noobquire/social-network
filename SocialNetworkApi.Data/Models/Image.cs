@@ -17,10 +17,12 @@ namespace SocialNetworkApi.Data.Models
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(100, ErrorMessage = "Name length can be no more than 50 characters.")]
         public string Name { get; set; }
+
         [Required(ErrorMessage = "Extension is required.")]
         [StringLength(10, ErrorMessage = "Extension length can be no more than 50 characters.")]
         // TODO: Validate if extension is supported
         public string Extension { get; set; }
+
         [Required(ErrorMessage = "Data is required.")]
         [MaxLength((int)10E6, ErrorMessage = "Image size can be no more than 10 MB.")]
         public byte[] Data { get; set; }

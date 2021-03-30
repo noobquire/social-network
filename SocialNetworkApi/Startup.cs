@@ -45,6 +45,7 @@ namespace SocialNetworkApi
             services.AddScoped<IRepository<Image>, ImageRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IProfilesService, ProfilesService>();
 
             services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<SocialNetworkDbContext>()
