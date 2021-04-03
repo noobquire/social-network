@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Exceptions;
+using SocialNetworkApi.Services.Extensions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models.Dtos;
 
@@ -30,12 +31,9 @@ namespace SocialNetworkApi.Services.Implementations
                 UserId = new Guid(userId),
             };
 
-            var result = await _unitOfWork.Profiles.CreateAsync(profile);
-            return new ProfileDto()
-            {
-                Id = profile.Id.ToString(),
-                UserId = profile.UserId.ToString()
-            };
+            await _unitOfWork.Profiles.CreateAsync(profile);
+
+            return profile.ToDto();
         }
 
         private async Task<bool> ProfileExistsAsync(string userId)
@@ -53,7 +51,10 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<ProfileDto> GetByIdAsync(string profileId)
         {
-            throw new NotImplementedException();
+            var profile = await _unitOfWork
+                .Profiles
+                .GetByIdAsync(profileId);
+            return profile?.ToDto();
         }
 
         public async Task<bool> DeleteByIdAsync(string profileId)

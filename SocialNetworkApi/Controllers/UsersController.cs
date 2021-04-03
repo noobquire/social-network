@@ -39,23 +39,11 @@ namespace SocialNetworkApi.Controllers
             try
             {
                 var result = await _usersService.RegisterAsync(registerModel);
-                if (result.Succeeded)
-                {
-                    return Ok();
-                }
-
-                var message = string.Join(" ", result.Errors.Select(e => e.Description));
-                var error = new ApiError(message, HttpStatusCode.BadRequest);
-                return BadRequest(error);
+                return CreatedAtAction(nameof(GetById), new { userId = result.Id }, result);
             }
-            catch (UserAlreadyExistsException userExistsEx)
+            catch (RegisterUserException ex)
             {
-                var error = new ApiError(userExistsEx.Message, HttpStatusCode.BadRequest);
-                return BadRequest(error);
-            }
-            catch (RegisterUserException registerEx)
-            {
-                var error = new ApiError(registerEx.Message, HttpStatusCode.BadRequest);
+                var error = new ApiError(ex.Message, HttpStatusCode.BadRequest);
                 return BadRequest(error);
             }
         }
@@ -105,6 +93,7 @@ namespace SocialNetworkApi.Controllers
             if (!result)
             {
                 var error = new ApiError("Unable to reinstate user with such Id.", HttpStatusCode.NotFound);
+                return NotFound(error);
             }
 
             return Ok();

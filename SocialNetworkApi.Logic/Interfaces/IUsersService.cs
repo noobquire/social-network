@@ -9,7 +9,7 @@ namespace SocialNetworkApi.Services.Interfaces
 {
     public interface IUsersService
     {
-        Task<IdentityResult> RegisterAsync(UserRegisterModel registerModel);
+        Task<UserDto> RegisterAsync(UserRegisterModel registerModel);
         Task<JwtToken> LoginAsync(LoginModel loginModel);
         Task<UserDto> GetByIdAsync(string id);
         Task<UserDto> GetByEmailAsync(string email);
