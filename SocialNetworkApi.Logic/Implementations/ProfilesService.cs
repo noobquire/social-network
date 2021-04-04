@@ -35,6 +35,16 @@ namespace SocialNetworkApi.Services.Implementations
 
             return profile.ToDto();
         }
+        public async Task<bool> UpdateAsync(ProfileDto profile)
+        {
+            var storedProfile = await _unitOfWork.Profiles.GetByIdAsync(profile.Id);
+            if(storedProfile == null)
+            {
+                return false;
+            }
+            storedProfile.Update(profile);
+            return await _unitOfWork.Profiles.UpdateAsync(storedProfile);
+        }
 
         private async Task<bool> ProfileExistsAsync(string userId)
         {
@@ -42,11 +52,6 @@ namespace SocialNetworkApi.Services.Implementations
                 .Profiles
                 .GetAllAsync();
             return profiles.Any(p => p.UserId.ToString() == userId);
-        }
-
-        public async Task<bool> EditAsync(ProfileDto profile)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<ProfileDto> GetByIdAsync(string profileId)
@@ -59,7 +64,32 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<bool> DeleteByIdAsync(string profileId)
         {
-            throw new NotImplementedException();
+            var profile = await _unitOfWork.Profiles.GetByIdAsync(profileId);
+
+            if (profile == null || profile.IsDeleted)
+            {
+                return false;
+            }
+
+            profile.IsDeleted = true;
+
+            await _unitOfWork.Profiles.UpdateAsync(profile);
+            return true;
+        }
+
+        public async Task<bool> ReinstateAsync(string profileId)
+        {
+            var profile = await _unitOfWork.Profiles.GetByIdAsync(profileId);
+
+            if (profile == null || !profile.IsDeleted)
+            {
+                return false;
+            }
+
+            profile.IsDeleted = false;
+
+            await _unitOfWork.Profiles.UpdateAsync(profile);
+            return true;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +14,12 @@ namespace SocialNetworkApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
-        public UsersController(IUsersService usersService)
+        private readonly IAuthorizationService _authorizationService;
+
+        public UsersController(IUsersService usersService, IAuthorizationService authorizationService)
         {
             _usersService = usersService;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost("login")]
@@ -49,9 +51,18 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpDelete("{userId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> DeleteById([FromRoute]string userId)
         {
+            var user = await _usersService.GetByIdAsync(userId);
+            var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameUserPolicy");
+
+            if(!authResult.Succeeded)
+            {
+                var authError = new ApiError("You are not permitted to delete this user.", HttpStatusCode.BadRequest);
+                return Unauthorized(authError);
+            }
+
             var result = await _usersService.DeleteByIdAsync(userId);
             if (result)
             {
@@ -78,9 +89,9 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery]bool withDeleted = false)
+        public async Task<IActionResult> GetAll([FromQuery] bool withDeleted = false)
         {
-            var users = await _usersService.GetAllAsync();
+            var users = await _usersService.GetAllAsync(withDeleted);
 
             return Ok(users);
         }
@@ -89,7 +100,7 @@ namespace SocialNetworkApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Reinstate([FromRoute]string userId)
         {
-            var result = await _usersService.Reinstate(userId);
+            var result = await _usersService.ReinstateAsync(userId);
             if (!result)
             {
                 var error = new ApiError("Unable to reinstate user with such Id.", HttpStatusCode.NotFound);

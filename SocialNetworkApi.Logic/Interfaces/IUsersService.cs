@@ -15,6 +15,6 @@ namespace SocialNetworkApi.Services.Interfaces
         Task<UserDto> GetByEmailAsync(string email);
         Task<bool> DeleteByIdAsync(string id);
         Task<IEnumerable<UserDto>> GetAllAsync(bool withDeleted = false);
-        Task<bool> Reinstate(string userId);
+        Task<bool> ReinstateAsync(string userId);
     }
 }

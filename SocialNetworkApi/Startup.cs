@@ -8,13 +8,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SocialNetworkApi.Authorization.Handlers;
+using SocialNetworkApi.Authorization.Requirements;
 using SocialNetworkApi.Data;
 using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Data.Repositories;
+using SocialNetworkApi.Middleware;
 using SocialNetworkApi.Services.Implementations;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
@@ -46,6 +50,9 @@ namespace SocialNetworkApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfilesService, ProfilesService>();
+            services.AddScoped<IAuthorizationHandler, SameUserAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, SameProfileUserAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
 
             services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<SocialNetworkDbContext>()
@@ -78,6 +85,11 @@ namespace SocialNetworkApi
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SameUserPolicy", policy => policy.Requirements.Add(new SameUserRequirement()));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,6 +107,8 @@ namespace SocialNetworkApi
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<UnhandledExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

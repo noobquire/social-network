@@ -82,6 +82,7 @@ namespace SocialNetworkApi.Services.Implementations
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             foreach (var userRole in userRoles)
@@ -128,8 +129,12 @@ namespace SocialNetworkApi.Services.Implementations
             }
 
             user.IsDeleted = true;
+            
 
             await _userManager.UpdateAsync(user);
+            await _userManager.SetLockoutEnabledAsync(user, true);
+            await _profilesService.DeleteByIdAsync(user.ProfileId.ToString());
+
             return true;
         }
 
@@ -140,17 +145,10 @@ namespace SocialNetworkApi.Services.Implementations
             {
                 users = users.Where(u => !u.IsDeleted).ToList();
             }
-            return users.Select(user => new UserDto()
-            {
-                Id = user.Id.ToString(),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Username = user.UserName,
-                Email = user.Email,
-            });
+            return users.Select(user => user.ToDto());
         }
 
-        public async Task<bool> Reinstate(string userId)
+        public async Task<bool> ReinstateAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null || !user.IsDeleted)
@@ -159,6 +157,8 @@ namespace SocialNetworkApi.Services.Implementations
             }
             user.IsDeleted = false;
             await _userManager.UpdateAsync(user);
+            await _userManager.SetLockoutEnabledAsync(user, false);
+            await _profilesService.ReinstateAsync(user.ProfileId.ToString());
 
             return true;
         }
