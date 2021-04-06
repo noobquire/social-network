@@ -6,200 +6,301 @@
 	},
 	"item": [
 		{
-			"name": "Register user",
-			"event": [
+			"name": "User",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 201 Created\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							"var jsonData = JSON.parse(responseBody);\r",
-							"pm.collectionVariables.set(\"userId\", jsonData[\"id\"]);\r",
-							"pm.collectionVariables.set(\"profileId\", jsonData[\"profileId\"]);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"FirstName\": \"John\",\r\n    \"LastName\": \"Doe\",\r\n    \"Email\": \"johndoe101@gmail.com\",\r\n    \"Username\": \"johndoe101\",\r\n    \"Password\": \"Mysuperpassword123\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{address}}/api/users/register",
-					"protocol": "https",
-					"host": [
-						"{{address}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Login with admin email and password",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"var jsonData = JSON.parse(responseBody);\r",
-							"pm.collectionVariables.set(\"token\", jsonData[\"token\"]);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Email\": \"admin@socialnetwork.com\",\r\n    \"Password\": \"superUserPassword12345@\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{address}}/api/users/login",
-					"protocol": "https",
-					"host": [
-						"{{address}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get user by Id",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://{{address}}/api/users/{{userId}}",
-					"protocol": "https",
-					"host": [
-						"{{address}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{userId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get all users (Admin)",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://{{address}}/api/users/?withDeleted=true",
-					"protocol": "https",
-					"host": [
-						"{{address}}"
-					],
-					"path": [
-						"api",
-						"users",
-						""
-					],
-					"query": [
+					"name": "Register user",
+					"event": [
 						{
-							"key": "withDeleted",
-							"value": "true"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"userId\", jsonData[\"id\"]);\r",
+									"pm.collectionVariables.set(\"profileId\", jsonData[\"profileId\"]);"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"FirstName\": \"John\",\r\n    \"LastName\": \"Doe\",\r\n    \"Email\": \"johndoe101@gmail.com\",\r\n    \"Username\": \"johndoe101\",\r\n    \"Password\": \"Mysuperpassword123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/users/register",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with user email and password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData[\"token\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"admin@socialnetwork.com\",\r\n    \"Password\": \"superUserPassword12345@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/users/login",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with admin email and password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData[\"token\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"admin@socialnetwork.com\",\r\n    \"Password\": \"superUserPassword12345@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/users/login",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/?withDeleted=true",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "withDeleted",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reinstate user (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}/reinstate",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"reinstate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate user account by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Delete user by Id",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "https://{{address}}/api/users/{{userId}}",
-					"protocol": "https",
-					"host": [
-						"{{address}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{userId}}"
-					]
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get profile by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/profiles/{{profileId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{profileId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"73025779-61d5-48c1-8b1c-08d8f7508413\",\r\n    \"status\": \"This is some status\",\r\n    \"avatarId\": \"73025779-61d5-48c1-8b1c-08d8f7508413фвф\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/profiles",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all profiles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/profiles",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Reinstate user (Admin)",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://{{address}}/api/users/{{userId}}/reinstate",
-					"protocol": "https",
-					"host": [
-						"{{address}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{userId}}",
-						"reinstate"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get profile by Id",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://{{address}}/api/profiles/{{profileId}}",
-					"protocol": "https",
-					"host": [
-						"{{address}}"
-					],
-					"path": [
-						"api",
-						"profiles",
-						"{{profileId}}"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	],
 	"auth": {
@@ -243,6 +344,14 @@
 		},
 		{
 			"key": "profileId",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "password",
 			"value": ""
 		}
 	]

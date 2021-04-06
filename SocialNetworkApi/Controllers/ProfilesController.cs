@@ -21,6 +21,7 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("{profileId}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] string profileId)
         {
             var profile = await _profilesService.GetByIdAsync(profileId);
@@ -54,6 +55,13 @@ namespace SocialNetworkApi.Controllers
 
             var error = new ApiError("Profile with such Id was not found.", HttpStatusCode.NotFound);
             return NotFound(error);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _profilesService.GetAllAsync());
         }
     }
 }

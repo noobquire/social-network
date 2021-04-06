@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SocialNetworkApi.Data.Interfaces;
@@ -60,6 +61,12 @@ namespace SocialNetworkApi.Services.Implementations
                 .Profiles
                 .GetByIdAsync(profileId);
             return profile?.ToDto();
+        }
+
+        public async Task<IEnumerable<ProfileDto>> GetAllAsync()
+        {
+            return (await _unitOfWork.Profiles.GetAllAsync())
+                .Select(p => p.ToDto());
         }
 
         public async Task<bool> DeleteByIdAsync(string profileId)
