@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Exceptions;
+using SocialNetworkApi.Services.Extensions;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
@@ -22,21 +23,17 @@ namespace SocialNetworkApi.Services.Implementations
     {
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IProfilesService _profilesService;
 
-        public UsersService(UserManager<User> userManager, IConfiguration configuration)
+        public UsersService(UserManager<User> userManager, IConfiguration configuration, IProfilesService profilesService)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _profilesService = profilesService;
         }
 
-        public async Task<IdentityResult> RegisterAsync(UserRegisterModel registerModel)
+        public async Task<UserDto> RegisterAsync(UserRegisterModel registerModel)
         {
-            var existingUser = await _userManager.FindByEmailAsync(registerModel.Email);
-            if (existingUser != null)
-            {
-                throw new UserAlreadyExistsException("User with such email already exists");
-            }
-
             var newUser = new User
             {
                 FirstName = registerModel.FirstName,
@@ -46,8 +43,20 @@ namespace SocialNetworkApi.Services.Implementations
                 SecurityStamp = Guid.NewGuid().ToString()
             };
             var result = await _userManager.CreateAsync(newUser, registerModel.Password);
-            return result;
 
+            if (result.Succeeded)
+            {
+                var profile = await _profilesService.CreateAsync(newUser.Id.ToString());
+                var user = await _userManager.FindByEmailAsync(newUser.Email);
+                user.ProfileId = new Guid(profile.Id);
+                await _userManager.UpdateAsync(user);
+                return user.ToDto();
+            }
+            else
+            {
+                var message = string.Join(" ", result.Errors.Select(e => e.Description));
+                throw new RegisterUserException(message);
+            }
         }
 
         public async Task<JwtToken> LoginAsync(LoginModel loginModel)
@@ -73,6 +82,7 @@ namespace SocialNetworkApi.Services.Implementations
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             foreach (var userRole in userRoles)
@@ -100,39 +110,13 @@ namespace SocialNetworkApi.Services.Implementations
         public async Task<UserDto> GetByIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return null;
-            }
-            // TODO: Use AutoMapper
-            var dto = new UserDto()
-            {
-                Id = user.Id.ToString(),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Username = user.UserName,
-                Email = user.Email,
-            };
-            return dto;
+            return user?.ToDto();
         }
 
         public async Task<UserDto> GetByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return null;
-            }
-            // TODO: Use AutoMapper
-            var dto = new UserDto
-            {
-                Id = user.Id.ToString(),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Username = user.UserName,
-                Email = user.Email,
-            };
-            return dto;
+            return user?.ToDto();
         }
 
         public async Task<bool> DeleteByIdAsync(string id)
@@ -145,7 +129,12 @@ namespace SocialNetworkApi.Services.Implementations
             }
 
             user.IsDeleted = true;
+            
+
             await _userManager.UpdateAsync(user);
+            await _userManager.SetLockoutEnabledAsync(user, true);
+            await _profilesService.DeleteByIdAsync(user.ProfileId.ToString());
+
             return true;
         }
 
@@ -156,17 +145,10 @@ namespace SocialNetworkApi.Services.Implementations
             {
                 users = users.Where(u => !u.IsDeleted).ToList();
             }
-            return users.Select(user => new UserDto()
-            {
-                Id = user.Id.ToString(),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Username = user.UserName,
-                Email = user.Email,
-            });
+            return users.Select(user => user.ToDto());
         }
 
-        public async Task<bool> Reinstate(string userId)
+        public async Task<bool> ReinstateAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null || !user.IsDeleted)
@@ -175,6 +157,9 @@ namespace SocialNetworkApi.Services.Implementations
             }
             user.IsDeleted = false;
             await _userManager.UpdateAsync(user);
+            await _userManager.SetLockoutEnabledAsync(user, false);
+            await _profilesService.ReinstateAsync(user.ProfileId.ToString());
+
             return true;
         }
     }

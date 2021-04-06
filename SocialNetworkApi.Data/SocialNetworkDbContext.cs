@@ -48,9 +48,15 @@ namespace SocialNetworkApi.Data
                 .HasOne(p => p.Author)
                 .WithMany(u => u.Posts)
                 .HasForeignKey(p => p.AuthorId);
+            builder.Entity<Profile>()
+                .HasOne(p=> p.User)
+                .WithOne(u => u.Profile)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Profile>()
+                .HasOne(p => p.Avatar)
+                .WithMany()
+                .IsRequired(false);
             base.OnModelCreating(builder);
-
-
         }
     }
 }

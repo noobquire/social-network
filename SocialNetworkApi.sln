@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Data", "So
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.IntegrationTests", "SocialNetworkApi.IntegrationTests\SocialNetworkApi.IntegrationTests.csproj", "{F07710D4-5E8D-4E70-ABFD-6B83EFA9CD62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Services.Tests", "SocialNetworkApi.Logic.Tests\SocialNetworkApi.Services.Tests.csproj", "{3AD6997C-F582-4DE3-B4A5-65DC360D7B14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialNetworkApi.Services.Tests", "SocialNetworkApi.Services.Tests\SocialNetworkApi.Services.Tests.csproj", "{AE5ABA69-C8E6-4B4F-8864-E454579E8DFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +39,10 @@ Global
 		{F07710D4-5E8D-4E70-ABFD-6B83EFA9CD62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F07710D4-5E8D-4E70-ABFD-6B83EFA9CD62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F07710D4-5E8D-4E70-ABFD-6B83EFA9CD62}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AD6997C-F582-4DE3-B4A5-65DC360D7B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AD6997C-F582-4DE3-B4A5-65DC360D7B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AD6997C-F582-4DE3-B4A5-65DC360D7B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AD6997C-F582-4DE3-B4A5-65DC360D7B14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE5ABA69-C8E6-4B4F-8864-E454579E8DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE5ABA69-C8E6-4B4F-8864-E454579E8DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE5ABA69-C8E6-4B4F-8864-E454579E8DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE5ABA69-C8E6-4B4F-8864-E454579E8DFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,7 +52,7 @@ Global
 		{8CAA7979-3FD3-4386-88FE-9920D347EE78} = {D578E3DD-A364-4166-9773-54B060EA9C23}
 		{D09C6A42-0D56-4B0A-8080-0EE2CD4338E6} = {D578E3DD-A364-4166-9773-54B060EA9C23}
 		{F07710D4-5E8D-4E70-ABFD-6B83EFA9CD62} = {A4077142-AFC5-4B0D-A09F-3ADC05740687}
-		{3AD6997C-F582-4DE3-B4A5-65DC360D7B14} = {A4077142-AFC5-4B0D-A09F-3ADC05740687}
+		{AE5ABA69-C8E6-4B4F-8864-E454579E8DFD} = {A4077142-AFC5-4B0D-A09F-3ADC05740687}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4E4A0145-3D69-46FE-96CD-D589F5ECC0BF}

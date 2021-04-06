@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +14,12 @@ namespace SocialNetworkApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
-        public UsersController(IUsersService usersService)
+        private readonly IAuthorizationService _authorizationService;
+
+        public UsersController(IUsersService usersService, IAuthorizationService authorizationService)
         {
             _usersService = usersService;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost("login")]
@@ -39,31 +41,28 @@ namespace SocialNetworkApi.Controllers
             try
             {
                 var result = await _usersService.RegisterAsync(registerModel);
-                if (result.Succeeded)
-                {
-                    return Ok();
-                }
-
-                var message = string.Join(" ", result.Errors.Select(e => e.Description));
-                var error = new ApiError(message, HttpStatusCode.BadRequest);
-                return BadRequest(error);
+                return CreatedAtAction(nameof(GetById), new { userId = result.Id }, result);
             }
-            catch (UserAlreadyExistsException userExistsEx)
+            catch (RegisterUserException ex)
             {
-                var error = new ApiError(userExistsEx.Message, HttpStatusCode.BadRequest);
-                return BadRequest(error);
-            }
-            catch (RegisterUserException registerEx)
-            {
-                var error = new ApiError(registerEx.Message, HttpStatusCode.BadRequest);
+                var error = new ApiError(ex.Message, HttpStatusCode.BadRequest);
                 return BadRequest(error);
             }
         }
 
         [HttpDelete("{userId}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> DeleteById([FromRoute]string userId)
         {
+            var user = await _usersService.GetByIdAsync(userId);
+            var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameUserPolicy");
+
+            if(!authResult.Succeeded)
+            {
+                var authError = new ApiError("You are not permitted to delete this user.", HttpStatusCode.BadRequest);
+                return Unauthorized(authError);
+            }
+
             var result = await _usersService.DeleteByIdAsync(userId);
             if (result)
             {
@@ -90,9 +89,9 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery]bool withDeleted = false)
+        public async Task<IActionResult> GetAll([FromQuery] bool withDeleted = false)
         {
-            var users = await _usersService.GetAllAsync();
+            var users = await _usersService.GetAllAsync(withDeleted);
 
             return Ok(users);
         }
@@ -101,10 +100,11 @@ namespace SocialNetworkApi.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Reinstate([FromRoute]string userId)
         {
-            var result = await _usersService.Reinstate(userId);
+            var result = await _usersService.ReinstateAsync(userId);
             if (!result)
             {
                 var error = new ApiError("Unable to reinstate user with such Id.", HttpStatusCode.NotFound);
+                return NotFound(error);
             }
 
             return Ok();
