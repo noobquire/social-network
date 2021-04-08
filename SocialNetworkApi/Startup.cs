@@ -38,6 +38,7 @@ namespace SocialNetworkApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             services.AddDbContext<SocialNetworkDbContext>(
                 options => options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -48,12 +49,15 @@ namespace SocialNetworkApi
             services.AddScoped<IRepository<Message>, MessageRepository>();
             services.AddScoped<IRepository<Image>, ImageRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfilesService, ProfilesService>();
             services.AddScoped<IImagesService, ImagesService>();
+
             services.AddScoped<IAuthorizationHandler, SameUserAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SameProfileUserAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, SameImageOwnerAuthorizationHandler>();
 
             services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<SocialNetworkDbContext>()

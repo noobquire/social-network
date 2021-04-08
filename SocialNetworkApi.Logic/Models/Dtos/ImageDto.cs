@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SocialNetworkApi.Services.Models.Dtos
+﻿namespace SocialNetworkApi.Services.Models.Dtos
 {
     public class ImageDto
     {
@@ -11,5 +9,7 @@ namespace SocialNetworkApi.Services.Models.Dtos
         public string Extension { get; set; }
 
         public byte[] Data { get; set; }
+
+        public string OwnerId { get; set; }
     }
 }

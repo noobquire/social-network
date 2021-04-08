@@ -9,5 +9,7 @@
         public string Extension { get; set; }
 
         public string Size { get; set; }
+
+        public string OwnerId { get; set; }
     }
 }

@@ -7,25 +7,25 @@ namespace SocialNetworkApi.Services.Extensions
     {
         public static ImageDto ToDto(this Image image)
         {
-            if (image == null) return null;
             return new ImageDto
             {
                 Id = image.Id.ToString(),
                 Name = image.Name,
                 Extension = image.Extension.ToString().ToLowerInvariant(),
-                Data = image.Data
+                Data = image.Data,
+                OwnerId = image.OwnerId.ToString()
             };
         }
 
         public static ImageHeaderDto ToHeaderDto(this Image image)
         {
-            if (image == null) return null;
             return new ImageHeaderDto
             {
                 Id = image.Id.ToString(),
                 Name = image.Name,
                 Extension = image.Extension.ToString().ToLowerInvariant(),
-                Size = image.Data.LongLength.ToString()
+                Size = image.Data.LongLength.ToString(),
+                OwnerId = image.OwnerId.ToString()
             };
         }
     }

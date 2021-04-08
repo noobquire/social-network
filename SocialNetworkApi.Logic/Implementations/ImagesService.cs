@@ -67,12 +67,12 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<ImageDto> GetByIdAsync(string imageId)
         {
-            return (await _unitOfWork.Images.GetByIdAsync(imageId)).ToDto();
+            return (await _unitOfWork.Images.GetByIdAsync(imageId))?.ToDto();
         }
 
         public async Task<ImageHeaderDto> GetHeaderByIdAsync(string imageId)
         {
-            return (await _unitOfWork.Images.GetByIdAsync(imageId)).ToHeaderDto();
+            return (await _unitOfWork.Images.GetByIdAsync(imageId))?.ToHeaderDto();
         }
 
         public async Task<IEnumerable<ImageDto>> GetByUserAsync(string userId)

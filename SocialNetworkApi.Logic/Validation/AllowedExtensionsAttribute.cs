@@ -25,7 +25,8 @@ namespace SocialNetworkApi.Services.Validation
 
         public string GetErrorMessage()
         {
-            return $"Image extension is not supported.";
+            var availableExtensions = string.Join(' ', Enum.GetNames(typeof(ImageExtensions)).Select(e => e.ToLowerInvariant()));
+            return $"Image extension is not supported. Available extensions: {availableExtensions}";
         }
     }
 }
