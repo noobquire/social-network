@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialNetworkApi.Data;
 
 namespace SocialNetworkApi.Data.Migrations
 {
     [DbContext(typeof(SocialNetworkDbContext))]
-    partial class SocialNetworkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210406185735_ImageOwner")]
+    partial class ImageOwner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,7 +188,7 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("OwnerId")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -450,8 +452,10 @@ namespace SocialNetworkApi.Data.Migrations
             modelBuilder.Entity("SocialNetworkApi.Data.Models.Image", b =>
                 {
                     b.HasOne("SocialNetworkApi.Data.Models.User", "Owner")
-                        .WithMany("Images")
-                        .HasForeignKey("OwnerId");
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Owner");
                 });
@@ -485,8 +489,7 @@ namespace SocialNetworkApi.Data.Migrations
                 {
                     b.HasOne("SocialNetworkApi.Data.Models.Image", "AttachedImage")
                         .WithMany()
-                        .HasForeignKey("AttachedImageId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("AttachedImageId");
 
                     b.HasOne("SocialNetworkApi.Data.Models.User", "Author")
                         .WithMany("Posts")
@@ -511,8 +514,7 @@ namespace SocialNetworkApi.Data.Migrations
                 {
                     b.HasOne("SocialNetworkApi.Data.Models.Image", "Avatar")
                         .WithMany()
-                        .HasForeignKey("AvatarId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("AvatarId");
 
                     b.HasOne("SocialNetworkApi.Data.Models.User", "User")
                         .WithOne("Profile")
@@ -559,8 +561,6 @@ namespace SocialNetworkApi.Data.Migrations
             modelBuilder.Entity("SocialNetworkApi.Data.Models.User", b =>
                 {
                     b.Navigation("Chats");
-
-                    b.Navigation("Images");
 
                     b.Navigation("Messages");
 

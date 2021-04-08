@@ -9,52 +9,46 @@ namespace SocialNetworkApi.Data.Repositories
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
-        private readonly SocialNetworkDbContext _context;
+        protected readonly SocialNetworkDbContext Context;
 
         protected Repository(SocialNetworkDbContext context)
         {
-            _context = context;
+            Context = context;
         }
 
         public async Task<TEntity> GetByIdAsync(string id)
         {
-            return await _context
+            return await Context
                 .Set<TEntity>()
                 .FirstOrDefaultAsync(e => e.Id.ToString() == id);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await _context
+            return await Context
                 .Set<TEntity>()
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<TEntity>> QueryAsync(Func<TEntity, bool> predicate)
         {
-            return (await _context
+            return (await Context
                     .Set<TEntity>()
                     .ToListAsync())
                 .Where(predicate);
         }
 
-        public async Task<bool> DeleteByIdAsync(string id)
+        public virtual async Task<bool> DeleteByIdAsync(string id)
         {
             var entity = await GetByIdAsync(id);
             if (entity == null)
             {
                 return false;
             }
-            try
-            {
-                _context.Remove(entity);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+
+            Context.Remove(entity);
+            await Context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)
@@ -64,15 +58,15 @@ namespace SocialNetworkApi.Data.Repositories
             {
                 return false;
             }
-            _context.Update(entity);
-            await _context.SaveChangesAsync();
+            Context.Update(entity);
+            await Context.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> CreateAsync(TEntity entity)
         {
-            await _context.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            await Context.AddAsync(entity);
+            await Context.SaveChangesAsync();
             return true;
         }
     }

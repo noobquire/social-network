@@ -22,6 +22,7 @@ namespace SocialNetworkApi.Data.Models
         public List<UserChat> Chats { get; set; }
         public List<Message> Messages { get; set; }
         public List<Post> Posts { get; set; }
+        public List<Image> Images { get; set; }
         public bool IsDeleted { get; set; }
         [ForeignKey("ProfileId")]
         public Profile Profile { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using SocialNetworkApi.Data.Interfaces;
 
 namespace SocialNetworkApi.Data.Models
@@ -19,12 +20,16 @@ namespace SocialNetworkApi.Data.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Extension is required.")]
-        [StringLength(10, ErrorMessage = "Extension length can be no more than 50 characters.")]
-        // TODO: Validate if extension is supported
-        public string Extension { get; set; }
+        [MaxLength(10)]
+        public ImageExtensions Extension { get; set; }
 
         [Required(ErrorMessage = "Data is required.")]
         [MaxLength((int)10E6, ErrorMessage = "Image size can be no more than 10 MB.")]
         public byte[] Data { get; set; }
+
+        [ForeignKey("OwnerId")]
+        public User Owner { get; set; }
+
+        public Guid? OwnerId { get; set; }
     }
 }
