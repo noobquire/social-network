@@ -27,7 +27,10 @@ namespace SocialNetworkApi.Data.Models
         [ForeignKey("Profile")]
         public Guid ProfileId { get; set; }
 
+        [ForeignKey("AttachedImageId")]
         public Image AttachedImage { get; set; }
+
+        public Guid? AttachedImageId { get; set; }
 
         [Required(ErrorMessage = "Text is required")]
         [StringLength(2000, ErrorMessage = "Text is required.")]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Data.Models;
+using System.Globalization;
 
 namespace SocialNetworkApi.Data
 {
@@ -22,6 +23,7 @@ namespace SocialNetworkApi.Data
         {
             builder.Entity<UserChat>()
                 .HasKey(uc => new { uc.ChatId, uc.UserId });
+
             builder.Entity<UserChat>()
                 .HasOne(uc => uc.User)
                 .WithMany(u => u.Chats)
@@ -48,6 +50,13 @@ namespace SocialNetworkApi.Data
                 .HasOne(p => p.Author)
                 .WithMany(u => u.Posts)
                 .HasForeignKey(p => p.AuthorId);
+            builder.Entity<Post>()
+                .HasOne(p => p.AttachedImage)
+                .WithMany()
+                .HasForeignKey(p => p.AttachedImageId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.Entity<Profile>()
                 .HasOne(p=> p.User)
                 .WithOne(u => u.Profile)
@@ -56,6 +65,23 @@ namespace SocialNetworkApi.Data
                 .HasOne(p => p.Avatar)
                 .WithMany()
                 .IsRequired(false);
+            builder.Entity<Profile>()
+                .HasOne(p => p.Avatar)
+                .WithMany()
+                .HasForeignKey(p => p.AvatarId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            var ti = CultureInfo.InvariantCulture.TextInfo;
+            builder.Entity<Image>()
+                .Property(i => i.Extension)
+                .HasConversion(
+                    e => e.ToString().ToLowerInvariant(),
+                    e => (ImageExtensions) Enum.Parse(typeof(ImageExtensions), ti.ToTitleCase(e)));
+            builder.Entity<Image>()
+                .Property(i => i.OwnerId)
+                .IsRequired(false);
+            
             base.OnModelCreating(builder);
         }
     }

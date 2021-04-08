@@ -50,6 +50,7 @@ namespace SocialNetworkApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfilesService, ProfilesService>();
+            services.AddScoped<IImagesService, ImagesService>();
             services.AddScoped<IAuthorizationHandler, SameUserAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SameProfileUserAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
