@@ -3,6 +3,7 @@
     public enum ImageExtensions
     {
         Jpeg,
+        Jpg,
         Png,
         Gif,
         Bmp

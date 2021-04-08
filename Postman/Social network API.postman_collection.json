@@ -260,7 +260,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"73025779-61d5-48c1-8b1c-08d8f7508413\",\r\n    \"status\": \"This is some status\",\r\n    \"avatarId\": \"73025779-61d5-48c1-8b1c-08d8f7508413фвф\"\r\n}\r\n",
+							"raw": "{\r\n    \"id\": \"73025779-61d5-48c1-8b1c-08d8f7508413\",\r\n    \"status\": \"This is some status\",\r\n    \"avatarId\": \"{{imageId}}\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -295,6 +295,160 @@
 							"path": [
 								"api",
 								"profiles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Images",
+			"item": [
+				{
+					"name": "Upload image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"imageId\", jsonData[\"id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Alexey/Downloads/airport.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{address}}/api/images",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete image by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/images/{{imageId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images",
+								"{{imageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get image by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/images/{{imageId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images",
+								"{{imageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get image header by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/images/{{imageId}}/header",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images",
+								"{{imageId}}",
+								"header"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get images by user Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}/images/headers",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"images",
+								"headers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get image headers by user Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}/images/",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"images",
+								""
 							]
 						}
 					},
@@ -352,6 +506,10 @@
 		},
 		{
 			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "imageId",
 			"value": ""
 		}
 	]
