@@ -55,7 +55,7 @@ namespace SocialNetworkApi.Controllers
         public async Task<IActionResult> DeleteById([FromRoute]string userId)
         {
             var user = await _usersService.GetByIdAsync(userId);
-            var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameOrAdminUserPolicy");
 
             if(!authResult.Succeeded)
             {

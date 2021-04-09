@@ -1,20 +1,17 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Authorization.Requirements;
 
 namespace SocialNetworkApi.Authorization.Handlers
 {
-    public class AdminAuthorizationHandler : IAuthorizationHandler
+    public class AdminAuthorizationHandler : AuthorizationHandler<SameUserRequirement>
     {
-        public Task HandleAsync(AuthorizationHandlerContext context)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SameUserRequirement requirement)
         {
-            if(context.User.IsInRole("Admin"))
+            if (requirement.AllowAdmin && context.User.IsInRole("Admin"))
             {
-                var pendingRequirements = context.PendingRequirements.ToList();
-                foreach (var requirement in pendingRequirements)
-                {
-                    context.Succeed(requirement);
-                }
+                context.Succeed(requirement);
             }
 
             return Task.CompletedTask;

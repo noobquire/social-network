@@ -71,7 +71,7 @@ namespace SocialNetworkApi.Controllers
                 var notFoundError = new ApiError("Image with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(notFoundError);
             }
-            var authResult = await _authorizationService.AuthorizeAsync(User, image, "SameUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, image, "SameOrAdminUserPolicy");
 
             if (!authResult.Succeeded)
             {

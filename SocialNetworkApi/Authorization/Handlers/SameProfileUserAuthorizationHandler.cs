@@ -7,20 +7,20 @@ using SocialNetworkApi.Services.Models.Dtos;
 
 namespace SocialNetworkApi.Authorization.Handlers
 {
-    public class SameUserAuthorizationHandler :
-        AuthorizationHandler<SameUserRequirement, UserDto>
+    public class SameProfileUserAuthorizationHandler :
+        AuthorizationHandler<SameUserRequirement, ProfileDto>
     {
         private readonly UserManager<User> _userManager;
 
-        public SameUserAuthorizationHandler(UserManager<User> userManager)
+        public SameProfileUserAuthorizationHandler(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, SameUserRequirement requirement, UserDto resource)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, SameUserRequirement requirement, ProfileDto resource)
         {
             var authUser = await _userManager.GetUserAsync(context.User);
-            if (authUser?.Id.ToString() == resource.Id)
+            if (authUser.Id.ToString() == resource.UserId)
             {
                 context.Succeed(requirement);
             }

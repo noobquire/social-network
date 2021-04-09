@@ -93,7 +93,8 @@ namespace SocialNetworkApi
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("SameUserPolicy", policy => policy.Requirements.Add(new SameUserRequirement()));
+                options.AddPolicy("SameOrAdminUserPolicy", policy => policy.Requirements.Add(new SameUserRequirement(true)));
+                options.AddPolicy("SameUserPolicy", policy => policy.Requirements.Add(new SameUserRequirement(false)));
             });
         }
 
