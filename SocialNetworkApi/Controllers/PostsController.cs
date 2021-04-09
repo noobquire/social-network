@@ -9,7 +9,6 @@ using SocialNetworkApi.Services.Models;
 
 namespace SocialNetworkApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
     {
@@ -28,8 +27,9 @@ namespace SocialNetworkApi.Controllers
         public async Task<IActionResult> CreatePost([FromRoute] string profileId, [FromBody, Required] PostDataModel data)
         {
             // TODO: Authorize if user can write posts in this profile
+            // Add "profile lockout", so that only this user can write posts
             var post = await _postsService.CreateAsync(profileId, data);
-            return CreatedAtAction("GetPostById", new {postId = post.Id}, post);
+            return CreatedAtAction(nameof(GetPostById), "Posts", new { profileId, postId = post.Id }, post);
         }
 
         [HttpGet]
@@ -62,18 +62,18 @@ namespace SocialNetworkApi.Controllers
         [Authorize]
         public async Task<IActionResult> DeletePost([FromRoute] string postId)
         {
-            var post = _postsService.GetByIdAsync(postId);
+            var post = await _postsService.GetByIdAsync(postId);
 
             if (post == null)
             {
-                var notFoundError = new ApiError("Image with such Id was not found.", HttpStatusCode.NotFound);
+                var notFoundError = new ApiError("Post with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(notFoundError);
             }
-            var authResult = await _authorizationService.AuthorizeAsync(User, post, "SameUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, post, "SameOrAdminUserPolicy");
 
             if (!authResult.Succeeded)
             {
-                var authError = new ApiError("You are not permitted to delete this post.", HttpStatusCode.BadRequest);
+                var authError = new ApiError("You are not permitted to delete this post.", HttpStatusCode.Unauthorized);
                 return Unauthorized(authError);
             }
 
@@ -89,18 +89,18 @@ namespace SocialNetworkApi.Controllers
             [FromRoute] string postId,
             [FromBody, Required] PostDataModel data)
         {
-            var post = _postsService.GetByIdAsync(postId);
+            var post = await _postsService.GetByIdAsync(postId);
 
             if (post == null)
             {
-                var notFoundError = new ApiError("Image with such Id was not found.", HttpStatusCode.NotFound);
+                var notFoundError = new ApiError("Post with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(notFoundError);
             }
             var authResult = await _authorizationService.AuthorizeAsync(User, post, "SameUserPolicy");
 
             if (!authResult.Succeeded)
             {
-                var authError = new ApiError("You are not permitted to delete this post.", HttpStatusCode.BadRequest);
+                var authError = new ApiError("You are not permitted to update this post.", HttpStatusCode.Unauthorized);
                 return Unauthorized(authError);
             }
 

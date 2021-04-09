@@ -13,7 +13,7 @@ using SocialNetworkApi.Services.Models.Dtos;
 
 namespace SocialNetworkApi.Services.Implementations
 {
-    class PostsService : IPostsService
+    public class PostsService : IPostsService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
@@ -28,7 +28,7 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<PostDto> GetByIdAsync(string postId)
         {
-            return (await _unitOfWork.Posts.GetByIdAsync(postId)).ToDto();
+            return (await _unitOfWork.Posts.GetByIdAsync(postId))?.ToDto();
         }
 
         public async Task<IEnumerable<PostDto>> GetByProfileAsync(string profileId)
@@ -44,7 +44,7 @@ namespace SocialNetworkApi.Services.Implementations
             var post = new Post()
             {
                 ProfileId = new Guid(profileId),
-                AttachedImageId = new Guid(postData.AttachedImageId),
+                AttachedImageId = postData.AttachedImageId == null ? null : new Guid?(new Guid(postData.AttachedImageId)),
                 Text = postData.Text,
                 AuthorId = await GetUserId(),
                 TimePublished = DateTime.UtcNow

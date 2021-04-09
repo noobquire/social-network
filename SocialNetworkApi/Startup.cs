@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,11 +52,13 @@ namespace SocialNetworkApi
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfilesService, ProfilesService>();
             services.AddScoped<IImagesService, ImagesService>();
+            services.AddScoped<IPostsService, PostsService>();
 
+            services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SameUserAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SameProfileUserAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, AdminAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SameImageOwnerAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, SamePostAuthorAuthorizationHandler>();
 
             services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<SocialNetworkDbContext>()

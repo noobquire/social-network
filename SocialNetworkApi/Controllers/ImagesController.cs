@@ -75,7 +75,7 @@ namespace SocialNetworkApi.Controllers
 
             if (!authResult.Succeeded)
             {
-                var authError = new ApiError("You are not permitted to delete this image.", HttpStatusCode.BadRequest);
+                var authError = new ApiError("You are not permitted to delete this image.", HttpStatusCode.Unauthorized);
                 return Unauthorized(authError);
             }
 
