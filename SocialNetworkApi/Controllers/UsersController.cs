@@ -22,6 +22,7 @@ namespace SocialNetworkApi.Controllers
             _authorizationService = authorizationService;
         }
 
+        // /api/users/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
@@ -50,12 +51,13 @@ namespace SocialNetworkApi.Controllers
             }
         }
 
+        // DELETE /api/users/user-id?
         [HttpDelete("{userId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteById([FromRoute]string userId)
+        public async Task<IActionResult> DeleteById([FromRoute] string userId)
         {
             var user = await _usersService.GetByIdAsync(userId);
-            var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameOrAdminUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameOrAdminUser");
 
             if(!authResult.Succeeded)
             {

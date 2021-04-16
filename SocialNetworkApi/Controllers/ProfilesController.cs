@@ -39,7 +39,7 @@ namespace SocialNetworkApi.Controllers
         public async Task<IActionResult> UpdateProfile([FromBody] ProfileDto profile)
         {
             var storedProfile = await _profilesService.GetByIdAsync(profile.Id);
-            var authResult = await _authorizationService.AuthorizeAsync(User, storedProfile, "SameUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, storedProfile, "SameUser");
 
             if (!authResult.Succeeded)
             {

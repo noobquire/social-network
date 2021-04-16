@@ -10,6 +10,7 @@ using SocialNetworkApi.Services.Models;
 namespace SocialNetworkApi.Controllers
 {
     [ApiController]
+    [Authorize]
     public class PostsController : ControllerBase
     {
         private readonly IPostsService _postsService;
@@ -23,8 +24,8 @@ namespace SocialNetworkApi.Controllers
 
         [HttpPost]
         [Route("api/profiles/{profileId}/posts")]
-        [Authorize]
-        public async Task<IActionResult> CreatePost([FromRoute] string profileId, [FromBody, Required] PostDataModel data)
+        public async Task<IActionResult> CreatePost([FromRoute] string profileId,
+            [FromBody, Required] PostDataModel data)
         {
             // TODO: Authorize if user can write posts in this profile
             // Add "profile lockout", so that only this user can write posts
@@ -34,7 +35,6 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Route("api/profiles/{profileId}/posts/{postId}")]
-        [Authorize]
         public async Task<IActionResult> GetPostById([FromRoute] string postId)
         {
             var post = await _postsService.GetByIdAsync(postId);
@@ -49,7 +49,6 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Route("api/profiles/{profileId}/posts")]
-        [Authorize]
         public async Task<IActionResult> GetPostsByProfile([FromRoute] string profileId)
         {
             var posts = await _postsService.GetByProfileAsync(profileId);
@@ -59,7 +58,6 @@ namespace SocialNetworkApi.Controllers
 
         [HttpDelete]
         [Route("api/profiles/{profileId}/posts/{postId}")]
-        [Authorize]
         public async Task<IActionResult> DeletePost([FromRoute] string postId)
         {
             var post = await _postsService.GetByIdAsync(postId);
@@ -69,7 +67,7 @@ namespace SocialNetworkApi.Controllers
                 var notFoundError = new ApiError("Post with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(notFoundError);
             }
-            var authResult = await _authorizationService.AuthorizeAsync(User, post, "SameOrAdminUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, post, "SameOrAdminUser");
 
             if (!authResult.Succeeded)
             {
@@ -84,7 +82,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpPut]
         [Route("api/profiles/{profileId}/posts/{postId}")]
-        [Authorize]
+        // TODO: 
         public async Task<IActionResult> UpdatePost(
             [FromRoute] string postId,
             [FromBody, Required] PostDataModel data)
@@ -96,7 +94,7 @@ namespace SocialNetworkApi.Controllers
                 var notFoundError = new ApiError("Post with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(notFoundError);
             }
-            var authResult = await _authorizationService.AuthorizeAsync(User, post, "SameUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, post, "SameUser");
 
             if (!authResult.Succeeded)
             {
