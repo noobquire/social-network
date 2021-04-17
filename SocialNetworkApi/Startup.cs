@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Middleware;
 using SocialNetworkApi.Services.Interfaces;
@@ -32,11 +33,31 @@ namespace SocialNetworkApi
             services.AddServices();
             services.AddAuthorizationHandlers();
             services.AddAuthorizationConfiguration(Configuration);
+            services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Bearer token", new OpenApiSecurityScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Social Network API");
+                c.RoutePrefix = "api-docs";
+            });
+
+            app.UseStatusCodePages();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

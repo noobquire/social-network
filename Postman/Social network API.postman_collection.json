@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
 	"info": {
 		"_postman_id": "c2d9f237-f92f-4007-8839-d87e0a6d672e",
@@ -670,4 +671,521 @@
 			"value": ""
 		}
 	]
+=======
+{
+	"info": {
+		"_postman_id": "c2d9f237-f92f-4007-8839-d87e0a6d672e",
+		"name": "Social network API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"userId\", jsonData[\"id\"]);\r",
+									"pm.collectionVariables.set(\"profileId\", jsonData[\"profileId\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"FirstName\": \"John\",\r\n    \"LastName\": \"Doe\",\r\n    \"Email\": \"johndoe101@gmail.com\",\r\n    \"Username\": \"johndoe101\",\r\n    \"Password\": \"Mysuperpassword123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/users/register",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with user email and password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData[\"token\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"admin@socialnetwork.com\",\r\n    \"Password\": \"superUserPassword12345@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/users/login",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login with admin email and password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"token\", jsonData[\"token\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Email\": \"admin@socialnetwork.com\",\r\n    \"Password\": \"superUserPassword12345@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/users/login",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/?withDeleted=true",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "withDeleted",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reinstate user (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}/reinstate",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"reinstate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate user account by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "Get profile by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/profiles/{{profileId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{profileId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update profile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"73025779-61d5-48c1-8b1c-08d8f7508413\",\r\n    \"status\": \"This is some status\",\r\n    \"avatarId\": \"{{imageId}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/profiles",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all profiles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/profiles",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Images",
+			"item": [
+				{
+					"name": "Upload image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"imageId\", jsonData[\"id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Alexey/Downloads/airport.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{address}}/api/images",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete image by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/images/{{imageId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images",
+								"{{imageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get image by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/images/{{imageId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images",
+								"{{imageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get image header by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/images/{{imageId}}/header",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"images",
+								"{{imageId}}",
+								"header"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get images by user Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}/images/headers",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"images",
+								"headers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get image headers by user Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{userId}}/images/",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}",
+								"images",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBzb2NpYWxuZXR3b3JrLmNvbSIsImp0aSI6IjBmNDFmMWJkLTdhMTctNGQzYy1iMjNkLWQ0ODNjNzRjNjIyYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNjE3Mjg1ODg1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYxOTU1IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0MjAwIn0.-hQ5VRdsB5EtC13ZGv_8yxi9HKJXjRRzNN9BiowKfZE"
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "profileId",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "imageId",
+			"value": ""
+		}
+	]
+>>>>>>> Stashed changes
 }
