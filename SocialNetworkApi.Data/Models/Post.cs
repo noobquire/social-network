@@ -33,7 +33,7 @@ namespace SocialNetworkApi.Data.Models
         public Guid? AttachedImageId { get; set; }
 
         [Required(ErrorMessage = "Text is required")]
-        [StringLength(2000, ErrorMessage = "Text is required.")]
+        [StringLength(2000, ErrorMessage = "Max length exceeded")]
         public string Text { get; set; }
 
         public DateTime TimePublished { get; set; }

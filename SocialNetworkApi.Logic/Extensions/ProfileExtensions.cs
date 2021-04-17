@@ -19,8 +19,8 @@ namespace SocialNetworkApi.Services.Extensions
 
         public static void Update(this Profile profile, ProfileDto dto)
         {
-            profile.Status = dto.Status;
-            profile.AvatarId = dto.AvatarId == null ? null : new Guid?(new Guid(dto.AvatarId));
+            profile.Status = dto.Status ?? profile.Status;
+            profile.AvatarId = dto.AvatarId == null ? profile.AvatarId : new Guid(dto.AvatarId);
         }
     }
 }

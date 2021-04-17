@@ -75,7 +75,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Email\": \"admin@socialnetwork.com\",\r\n    \"Password\": \"superUserPassword12345@\"\r\n}",
+							"raw": "{\r\n    \"Email\": \"johndoe106@gmail.com\",\r\n    \"Password\": \"Mysuperpassword123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -455,6 +455,152 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "Create post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"postId\", jsonData[\"id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{profileId}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get posts in profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{profileId}}",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get post by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{profileId}}",
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{profileId}}",
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"attachedImageId\": \"{{imageId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{profileId}}",
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -489,27 +635,38 @@
 	],
 	"variable": [
 		{
+			"id": "4f0269af-f945-4940-82f0-2bcca0565945",
 			"key": "token",
 			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBzb2NpYWxuZXR3b3JrLmNvbSIsImp0aSI6IjBmNDFmMWJkLTdhMTctNGQzYy1iMjNkLWQ0ODNjNzRjNjIyYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNjE3Mjg1ODg1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYxOTU1IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0MjAwIn0.-hQ5VRdsB5EtC13ZGv_8yxi9HKJXjRRzNN9BiowKfZE"
 		},
 		{
+			"id": "5076fb22-e703-4490-bc71-b2588aed6e9a",
 			"key": "userId",
 			"value": ""
 		},
 		{
+			"id": "61484f8f-6cd1-4d16-86d0-8b9a193ee204",
 			"key": "profileId",
 			"value": ""
 		},
 		{
+			"id": "a2a9d167-fabc-4455-bafb-08aae5466f78",
 			"key": "email",
 			"value": ""
 		},
 		{
+			"id": "b3b2006d-2657-413a-a2ec-9c4149fd388f",
 			"key": "password",
 			"value": ""
 		},
 		{
+			"id": "e02f001a-be25-45de-83c4-d6375dbf63d6",
 			"key": "imageId",
+			"value": ""
+		},
+		{
+			"id": "155bd35b-962f-4d29-999d-e65b9fac201e",
+			"key": "postId",
 			"value": ""
 		}
 	]

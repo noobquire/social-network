@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Validation;
@@ -71,11 +70,11 @@ namespace SocialNetworkApi.Controllers
                 var notFoundError = new ApiError("Image with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(notFoundError);
             }
-            var authResult = await _authorizationService.AuthorizeAsync(User, image, "SameUserPolicy");
+            var authResult = await _authorizationService.AuthorizeAsync(User, image, "SameOrAdminUser");
 
             if (!authResult.Succeeded)
             {
-                var authError = new ApiError("You are not permitted to delete this image.", HttpStatusCode.BadRequest);
+                var authError = new ApiError("You are not permitted to delete this image.", HttpStatusCode.Unauthorized);
                 return Unauthorized(authError);
             }
 
