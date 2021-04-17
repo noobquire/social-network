@@ -23,10 +23,6 @@ namespace SocialNetworkApi.Authorization.Handlers
             {
                 context.Succeed(requirement);
             }
-            if (authUser.ProfileId.ToString() == resource.ProfileId)
-            {
-                context.Succeed(requirement);
-            }
         }
     }
 }
