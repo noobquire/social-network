@@ -22,7 +22,7 @@ namespace SocialNetworkApi.Data.Models
         [Required(ErrorMessage = "At least two participants are required.")]
         [MinLength(2, ErrorMessage = "At least two participants are required.")]
         [MaxLength(50, ErrorMessage = "No more than 50 participants are allowed.")]
-        public virtual List<UserChat> Participants { get; set; }
+        public virtual List<UserChat> Participants { get; set; } = new List<UserChat>();
 
         public virtual List<Message> Messages { get; set; }
 

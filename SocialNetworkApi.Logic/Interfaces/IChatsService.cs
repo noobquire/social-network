@@ -7,7 +7,8 @@ namespace SocialNetworkApi.Services.Interfaces
 {
     public interface IChatsService
     {
-        Task<ChatDto> CreateAsync(NewChatModel newChat);
+        Task<ChatDto> CreateGroupAsync(NewChatModel newChat);
+        Task<ChatDto> CreatePersonalAsync(string userId);
         Task<ChatDto> GetByIdAsync(string chatId);
         Task<IEnumerable<ChatDto>> GetUserChats();
         Task<bool> LeaveChatAsync(string chatId);

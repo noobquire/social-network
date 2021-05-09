@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SocialNetworkApi.Attributes;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
@@ -26,7 +27,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpPost]
         [Route("api/profiles/{profileId}/posts")]
-        public async Task<IActionResult> CreatePost([FromRoute] string profileId,
+        public async Task<IActionResult> CreatePost([FromRoute][ValidateGuid] string profileId,
             [FromBody, Required] PostDataModel data)
         {
             // TODO: Authorize if user can write posts in this profile
@@ -37,7 +38,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Route("api/profiles/{profileId}/posts/{postId}")]
-        public async Task<IActionResult> GetPostById([FromRoute] string postId)
+        public async Task<IActionResult> GetPostById([FromRoute][ValidateGuid] string postId)
         {
             var post = await _postsService.GetByIdAsync(postId);
             if (post == null)
@@ -51,7 +52,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Route("api/profiles/{profileId}/posts")]
-        public async Task<IActionResult> GetPostsByProfile([FromRoute] string profileId)
+        public async Task<IActionResult> GetPostsByProfile([FromRoute][ValidateGuid] string profileId)
         {
             var posts = await _postsService.GetByProfileAsync(profileId);
 
@@ -60,7 +61,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpDelete]
         [Route("api/profiles/{profileId}/posts/{postId}")]
-        public async Task<IActionResult> DeletePost([FromRoute] string postId)
+        public async Task<IActionResult> DeletePost([FromRoute][ValidateGuid] string postId)
         {
             var post = await _postsService.GetByIdAsync(postId);
 
@@ -88,7 +89,7 @@ namespace SocialNetworkApi.Controllers
         [HttpPut]
         [Route("api/profiles/{profileId}/posts/{postId}")]
         public async Task<IActionResult> UpdatePost(
-            [FromRoute] string postId,
+            [FromRoute][ValidateGuid] string postId,
             [FromBody, Required] PostDataModel data)
         {
             var post = await _postsService.GetByIdAsync(postId);

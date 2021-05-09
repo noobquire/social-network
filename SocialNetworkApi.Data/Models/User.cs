@@ -18,8 +18,9 @@ namespace SocialNetworkApi.Data.Models
         [Required(ErrorMessage = "LastName is required.")]
         [StringLength(50, ErrorMessage = "LastName length can be no more than 50 characters.")]
         public string LastName { get; set; }
+
         [MaxLength(50, ErrorMessage = "Max amount of chats exceeded.")]
-        public virtual List<UserChat> Chats { get; set; }
+        public virtual List<UserChat> Chats { get; set; } = new List<UserChat>();
         public virtual List<Message> Messages { get; set; }
         public virtual List<Post> Posts { get; set; }
         public virtual List<Image> Images { get; set; }

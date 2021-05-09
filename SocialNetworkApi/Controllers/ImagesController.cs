@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Attributes;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Validation;
@@ -34,7 +35,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet("{imageId}")]
         [Authorize]
-        public async Task<IActionResult> GetImageById([FromRoute] string imageId)
+        public async Task<IActionResult> GetImageById([FromRoute][ValidateGuid] string imageId)
         {
             var image = await _imagesService.GetByIdAsync(imageId);
             if (image == null)
@@ -48,7 +49,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet("{imageId}/header")]
         [Authorize]
-        public async Task<IActionResult> GetImageHeaderById([FromRoute] string imageId)
+        public async Task<IActionResult> GetImageHeaderById([FromRoute][ValidateGuid] string imageId)
         {
             var imageHeader = await _imagesService.GetHeaderByIdAsync(imageId);
             if (imageHeader == null)
@@ -62,7 +63,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpDelete("{imageId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteImageById([FromRoute] string imageId)
+        public async Task<IActionResult> DeleteImageById([FromRoute][ValidateGuid] string imageId)
         {
             var image = await _imagesService.GetByIdAsync(imageId);
             if(image == null)
@@ -92,7 +93,7 @@ namespace SocialNetworkApi.Controllers
         [HttpGet]
         [Route("/api/users/{userId}/images")]
         [Authorize]
-        public async Task<IActionResult> GetUserImages([FromRoute] string userId)
+        public async Task<IActionResult> GetUserImages([FromRoute][ValidateGuid] string userId)
         {
             return Ok(await _imagesService.GetByUserAsync(userId));
         }
@@ -100,7 +101,7 @@ namespace SocialNetworkApi.Controllers
         [HttpGet]
         [Route("/api/users/{userId}/images/headers")]
         [Authorize]
-        public async Task<IActionResult> GetUserImageHeaders([FromRoute] string userId)
+        public async Task<IActionResult> GetUserImageHeaders([FromRoute][ValidateGuid] string userId)
         {
             return Ok(await _imagesService.GetHeadersByUserAsync(userId));
         }
