@@ -19,15 +19,15 @@ namespace SocialNetworkApi.Data.Models
         [StringLength(200, ErrorMessage = "Status length can be no more than 50 characters.")]
         public string Status { get; set; }
 
-        public List<Post> Posts { get; set; }
+        public virtual List<Post> Posts { get; set; }
 
         [ForeignKey("AvatarId")] 
-        public Image Avatar { get; set; }
+        public virtual Image Avatar { get; set; }
 
         public Guid? AvatarId { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public virtual User User { get; set; }
 
         public Guid UserId { get; set; }
     }

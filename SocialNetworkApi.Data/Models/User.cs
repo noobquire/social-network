@@ -19,13 +19,11 @@ namespace SocialNetworkApi.Data.Models
         [StringLength(50, ErrorMessage = "LastName length can be no more than 50 characters.")]
         public string LastName { get; set; }
         [MaxLength(50, ErrorMessage = "Max amount of chats exceeded.")]
-        public List<UserChat> Chats { get; set; }
-        public List<Message> Messages { get; set; }
-        public List<Post> Posts { get; set; }
-        public List<Image> Images { get; set; }
+        public virtual List<UserChat> Chats { get; set; }
+        public virtual List<Message> Messages { get; set; }
+        public virtual List<Post> Posts { get; set; }
+        public virtual List<Image> Images { get; set; }
         public bool IsDeleted { get; set; }
-        [ForeignKey("ProfileId")]
-        public Profile Profile { get; set; }
-        public Guid ProfileId { get; set; }
+        public virtual Profile Profile { get; set; }
     }
 }

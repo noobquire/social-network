@@ -172,7 +172,7 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasMaxLength(10000000)
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("Extension")
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");

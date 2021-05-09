@@ -1,6 +1,6 @@
 ﻿namespace SocialNetworkApi.Data.Models
 {
-    public enum ImageExtensions
+    public enum ImageType
     {
         Jpeg,
         Jpg,

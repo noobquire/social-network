@@ -15,20 +15,20 @@ namespace SocialNetworkApi.Data.Models
 
         public bool IsDeleted { get; set; }
 
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
 
         [Required(ErrorMessage = "Author is required")]
         [ForeignKey("Author")]
         public Guid AuthorId { get; set; }
 
-        public Profile Profile { get; set; }
+        public virtual Profile Profile { get; set; }
 
         [Required(ErrorMessage = "Profile is required")]
         [ForeignKey("Profile")]
         public Guid ProfileId { get; set; }
 
         [ForeignKey("AttachedImageId")]
-        public Image AttachedImage { get; set; }
+        public virtual Image AttachedImage { get; set; }
 
         public Guid? AttachedImageId { get; set; }
 

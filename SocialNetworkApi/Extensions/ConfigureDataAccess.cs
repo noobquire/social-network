@@ -13,8 +13,11 @@ namespace SocialNetworkApi.Extensions
         public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<SocialNetworkDbContext>(
-                options => options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection")));
+                options =>
+                {
+                    options.UseLazyLoadingProxies();
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                });
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IRepository<Profile>, ProfileRepository>();
             services.AddScoped<IRepository<Post>, PostRepository>();

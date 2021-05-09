@@ -11,7 +11,6 @@ using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Extensions;
-using ImageExtensions = SocialNetworkApi.Data.Models.ImageExtensions;
 
 namespace SocialNetworkApi.Services.Implementations
 {
@@ -33,7 +32,7 @@ namespace SocialNetworkApi.Services.Implementations
             var image = new Image
             {
                 Name = Path.GetFileNameWithoutExtension(imageData.FileName),
-                Extension = GetExtension(imageData.FileName),
+                Type = GetExtension(imageData.FileName),
                 Data = await GetImageData(imageData),
                 OwnerId = await GetUserId()
             };
@@ -57,11 +56,11 @@ namespace SocialNetworkApi.Services.Implementations
             return data;
         }
 
-        private ImageExtensions GetExtension(string fileName)
+        private ImageType GetExtension(string fileName)
         {
             var extensionString = Path.GetExtension(fileName)?.Substring(1);
             var ti = CultureInfo.InvariantCulture.TextInfo;
-            var extension = (ImageExtensions)Enum.Parse(typeof(ImageExtensions), ti.ToTitleCase(extensionString ?? string.Empty));
+            var extension = (ImageType)Enum.Parse(typeof(ImageType), ti.ToTitleCase(extensionString ?? string.Empty));
             return extension;
         }
 

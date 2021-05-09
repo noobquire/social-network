@@ -46,10 +46,8 @@ namespace SocialNetworkApi.Services.Implementations
 
             if (result.Succeeded)
             {
-                var profile = await _profilesService.CreateAsync(newUser.Id.ToString());
+                await _profilesService.CreateAsync(newUser.Id.ToString());
                 var user = await _userManager.FindByEmailAsync(newUser.Email);
-                user.ProfileId = new Guid(profile.Id);
-                await _userManager.UpdateAsync(user);
                 return user.ToDto();
             }
             else
@@ -133,7 +131,7 @@ namespace SocialNetworkApi.Services.Implementations
 
             await _userManager.UpdateAsync(user);
             await _userManager.SetLockoutEnabledAsync(user, true);
-            await _profilesService.DeleteByIdAsync(user.ProfileId.ToString());
+            await _profilesService.DeleteByIdAsync(user.Profile.Id.ToString());
 
             return true;
         }
@@ -158,7 +156,7 @@ namespace SocialNetworkApi.Services.Implementations
             user.IsDeleted = false;
             await _userManager.UpdateAsync(user);
             await _userManager.SetLockoutEnabledAsync(user, false);
-            await _profilesService.ReinstateAsync(user.ProfileId.ToString());
+            await _profilesService.ReinstateAsync(user.Profile.Id.ToString());
 
             return true;
         }

@@ -19,16 +19,16 @@ namespace SocialNetworkApi.Data.Models
         [StringLength(100, ErrorMessage = "Name length can be no more than 50 characters.")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Extension is required.")]
+        [Required(ErrorMessage = "Type is required.")]
         [MaxLength(10)]
-        public ImageExtensions Extension { get; set; }
+        public ImageType Type { get; set; }
 
         [Required(ErrorMessage = "Data is required.")]
         [MaxLength((int)10E6, ErrorMessage = "Image size can be no more than 10 MB.")]
         public byte[] Data { get; set; }
 
         [ForeignKey("OwnerId")]
-        public User Owner { get; set; }
+        public virtual User Owner { get; set; }
 
         public Guid? OwnerId { get; set; }
     }

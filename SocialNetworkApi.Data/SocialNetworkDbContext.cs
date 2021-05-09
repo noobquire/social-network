@@ -74,10 +74,10 @@ namespace SocialNetworkApi.Data
 
             var ti = CultureInfo.InvariantCulture.TextInfo;
             builder.Entity<Image>()
-                .Property(i => i.Extension)
+                .Property(i => i.Type)
                 .HasConversion(
                     e => e.ToString().ToLowerInvariant(),
-                    e => (ImageExtensions) Enum.Parse(typeof(ImageExtensions), ti.ToTitleCase(e)));
+                    e => (ImageType) Enum.Parse(typeof(ImageType), ti.ToTitleCase(e)));
             builder.Entity<Image>()
                 .Property(i => i.OwnerId)
                 .IsRequired(false);

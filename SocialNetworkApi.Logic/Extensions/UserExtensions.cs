@@ -13,7 +13,7 @@ namespace SocialNetworkApi.Services.Extensions
                 LastName = user.LastName,
                 Id = user.Id.ToString(),
                 Email = user.Email,
-                ProfileId = user.ProfileId.ToString(),
+                ProfileId = user.Profile.Id.ToString(),
                 Username = user.UserName
             };
         }

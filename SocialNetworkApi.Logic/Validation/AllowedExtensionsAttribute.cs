@@ -12,11 +12,13 @@ namespace SocialNetworkApi.Services.Validation
         protected override ValidationResult IsValid(
             object value, ValidationContext validationContext)
         {
-            var extensions = Enum.GetNames(typeof(ImageExtensions)).Select(e => e.ToLowerInvariant());
             if (!(value is IFormFile file))
             {
-                return ValidationResult.Success;
+                return new ValidationResult("Specified parameter is not IFormFile");
             }
+
+            var extensions = Enum.GetNames(typeof(ImageType)).Select(e => e.ToLowerInvariant());
+            
             var extension = Path.GetExtension(file.FileName)?.Substring(1);
             return !extensions.Contains(extension?.ToLowerInvariant()) ? 
                 new ValidationResult(GetErrorMessage()) 
@@ -25,7 +27,7 @@ namespace SocialNetworkApi.Services.Validation
 
         public string GetErrorMessage()
         {
-            var availableExtensions = string.Join(' ', Enum.GetNames(typeof(ImageExtensions)).Select(e => e.ToLowerInvariant()));
+            var availableExtensions = string.Join(' ', Enum.GetNames(typeof(ImageType)).Select(e => e.ToLowerInvariant()));
             return $"Image extension is not supported. Available extensions: {availableExtensions}";
         }
     }
