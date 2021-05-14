@@ -42,7 +42,36 @@ namespace SocialNetworkApi.Controllers
         public async Task<IActionResult> GetChatById([FromRoute][ValidateGuid] string chatId)
         {
             var chat = await _chatsService.GetByIdAsync(chatId);
+
+            if (chat == null)
+            {
+                return NotFound(new ApiError("Chat with such Id was not found", HttpStatusCode.NotFound));
+            }
+
             return Ok(chat);
+        }
+
+        [HttpDelete("{chatId}")]
+        [Authorize]
+        public async Task<IActionResult> LeaveChat([FromRoute][ValidateGuid] string chatId)
+        {
+            var result = await _chatsService.LeaveChatAsync(chatId);
+
+            if (!result)
+            {
+                return NotFound(new ApiError("Chat not found", HttpStatusCode.NotFound));
+            }
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserChats()
+        {
+            var chats = await _chatsService.GetUserChats();
+
+            return Ok(chats);
         }
     }
 }

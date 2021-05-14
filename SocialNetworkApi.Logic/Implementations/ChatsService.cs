@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -78,24 +79,87 @@ namespace SocialNetworkApi.Services.Implementations
             return chat.ToDto();
         }
 
-        public Task<ChatDto> CreatePersonalAsync(string userId)
+        public async Task<ChatDto> CreatePersonalAsync(string userId)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByEmailAsync(userId);
+            var principal = _contextAccessor.HttpContext.User;
+            var ownerUser = await _userManager.GetUserAsync(principal);
+            var existingChat = await _unitOfWork.Chats
+                .QueryAsync(c => c.Type == ChatType.Personal && 
+                                 c.Participants.Any(uc => uc.UserId.ToString() == userId) 
+                                 && c.Participants.Any(uc => uc.UserId == ownerUser.Id));
+            if(existingChat != null)
+            {
+                throw new ItemAlreadyExistsException("Personal chat with this user already exists");
+            }
+
+            var chat = new Chat
+            {
+                Name = $"{user.FirstName} {user.LastName}",
+                Type = ChatType.Personal
+            };
+
+            await _unitOfWork.Chats.CreateAsync(chat);
+            
+
+            var firstParticipant = new UserChat
+            {
+                ChatId = chat.Id,
+                UserId = ownerUser.Id,
+                IsAdmin = false
+            };
+
+            var secondParticipant = new UserChat
+            {
+                ChatId = chat.Id,
+                UserId = user.Id,
+                IsAdmin = false
+            };
+
+            chat.Participants.Add(firstParticipant);
+            ownerUser.Chats.Add(firstParticipant);
+            chat.Participants.Add(secondParticipant);
+            ownerUser.Chats.Add(secondParticipant);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return chat.ToDto();
         }
 
         public async Task<ChatDto> GetByIdAsync(string chatId)
         {
-            return (await _unitOfWork.Chats.GetByIdAsync(chatId)).ToDto();
+            return (await _unitOfWork.Chats.GetByIdAsync(chatId))?.ToDto();
         }
 
-        public Task<IEnumerable<ChatDto>> GetUserChats()
+        public async Task<IEnumerable<ChatDto>> GetUserChats()
         {
-            throw new NotImplementedException();
+            var principal = _contextAccessor.HttpContext.User;
+            var currentUser = await _userManager.GetUserAsync(principal);
+            return (await _unitOfWork.Chats
+                    .QueryAsync(c => c.Participants
+                        .Any(p => p.UserId == currentUser.Id)))
+                .Select(c => c.ToDto());
         }
 
-        public Task<bool> LeaveChatAsync(string chatId)
+        public async Task<bool> LeaveChatAsync(string chatId)
         {
-            throw new NotImplementedException();
+            var principal = _contextAccessor.HttpContext.User;
+            var currentUser = await _userManager.GetUserAsync(principal);
+            var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
+            if (chat == null)
+            {
+                return false;
+            }
+
+            if (chat.Participants.All(p => p.UserId != currentUser.Id))
+            {
+                return false;
+            }
+
+            var userChat = chat.Participants.First(c => c.UserId == currentUser.Id);
+            chat.Participants.Remove(userChat);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
 
         public Task<bool> EditChatAsync(string chatId, ChatDto chatData)
