@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Attributes;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models.Dtos;
@@ -22,7 +23,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet("{profileId}")]
         [Authorize]
-        public async Task<IActionResult> GetById([FromRoute] string profileId)
+        public async Task<IActionResult> GetById([FromRoute][ValidateGuid] string profileId)
         {
             var profile = await _profilesService.GetByIdAsync(profileId);
             if (profile == null)
@@ -36,7 +37,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> UpdateProfile([FromBody] ProfileDto profile)
+        public async Task<IActionResult> UpdateProfile([FromBody][ValidateGuid] ProfileDto profile)
         {
             var storedProfile = await _profilesService.GetByIdAsync(profile.Id);
             var authResult = await _authorizationService.AuthorizeAsync(User, storedProfile, "SameUser");

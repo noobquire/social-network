@@ -7,9 +7,10 @@ namespace SocialNetworkApi.Data.Models
     /// </summary>
     public class UserChat
     {
-        public User User { get; set; }
+        public virtual User User { get; set; }
         public Guid UserId { get; set; }
-        public Chat Chat { get; set; }
+        public virtual Chat Chat { get; set; }
         public Guid ChatId { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

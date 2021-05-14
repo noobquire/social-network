@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Attributes;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
@@ -54,7 +55,7 @@ namespace SocialNetworkApi.Controllers
         // DELETE /api/users/user-id?
         [HttpDelete("{userId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteById([FromRoute] string userId)
+        public async Task<IActionResult> DeleteById([FromRoute][ValidateGuid] string userId)
         {
             var user = await _usersService.GetByIdAsync(userId);
             var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameOrAdminUser");
@@ -77,7 +78,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet("{userId}")]
         [Authorize]
-        public async Task<IActionResult> GetById([FromRoute] string userId)
+        public async Task<IActionResult> GetById([FromRoute][ValidateGuid] string userId)
         {
             var user = await _usersService.GetByIdAsync(userId);
             if (user == null)
@@ -91,7 +92,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery] bool withDeleted = false)
+        public async Task<IActionResult> GetAll([FromQuery][ValidateGuid] bool withDeleted = false)
         {
             var users = await _usersService.GetAllAsync(withDeleted);
 
@@ -100,7 +101,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet("{userId}/reinstate")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Reinstate([FromRoute]string userId)
+        public async Task<IActionResult> Reinstate([FromRoute][ValidateGuid] string userId)
         {
             var result = await _usersService.ReinstateAsync(userId);
             if (!result)

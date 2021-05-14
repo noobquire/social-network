@@ -10,15 +10,15 @@ using SocialNetworkApi.Data;
 namespace SocialNetworkApi.Data.Migrations
 {
     [DbContext(typeof(SocialNetworkDbContext))]
-    [Migration("20210330184702_UserProfiles")]
-    partial class UserProfiles
+    [Migration("20210509130039_ChatModelAndFixes")]
+    partial class ChatModelAndFixes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -159,6 +159,13 @@ namespace SocialNetworkApi.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Chats");
@@ -175,11 +182,6 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasMaxLength(10000000)
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -188,7 +190,17 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Images");
                 });
@@ -273,7 +285,7 @@ namespace SocialNetworkApi.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AvatarId")
+                    b.Property<Guid?>("AvatarId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsDeleted")
@@ -352,9 +364,6 @@ namespace SocialNetworkApi.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -385,6 +394,9 @@ namespace SocialNetworkApi.Data.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
 
                     b.HasKey("ChatId", "UserId");
 
@@ -444,6 +456,15 @@ namespace SocialNetworkApi.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SocialNetworkApi.Data.Models.Image", b =>
+                {
+                    b.HasOne("SocialNetworkApi.Data.Models.User", "Owner")
+                        .WithMany("Images")
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("SocialNetworkApi.Data.Models.Message", b =>
                 {
                     b.HasOne("SocialNetworkApi.Data.Models.User", "Author")
@@ -473,7 +494,8 @@ namespace SocialNetworkApi.Data.Migrations
                 {
                     b.HasOne("SocialNetworkApi.Data.Models.Image", "AttachedImage")
                         .WithMany()
-                        .HasForeignKey("AttachedImageId");
+                        .HasForeignKey("AttachedImageId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("SocialNetworkApi.Data.Models.User", "Author")
                         .WithMany("Posts")
@@ -499,8 +521,7 @@ namespace SocialNetworkApi.Data.Migrations
                     b.HasOne("SocialNetworkApi.Data.Models.Image", "Avatar")
                         .WithMany()
                         .HasForeignKey("AvatarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("SocialNetworkApi.Data.Models.User", "User")
                         .WithOne("Profile")
@@ -547,6 +568,8 @@ namespace SocialNetworkApi.Data.Migrations
             modelBuilder.Entity("SocialNetworkApi.Data.Models.User", b =>
                 {
                     b.Navigation("Chats");
+
+                    b.Navigation("Images");
 
                     b.Navigation("Messages");
 

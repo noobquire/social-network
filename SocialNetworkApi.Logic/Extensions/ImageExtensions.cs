@@ -11,7 +11,7 @@ namespace SocialNetworkApi.Services.Extensions
             {
                 Id = image.Id.ToString(),
                 Name = image.Name,
-                Extension = image.Extension.ToString().ToLowerInvariant(),
+                Extension = image.Type.ToString().ToLowerInvariant(),
                 Data = image.Data,
                 OwnerId = image.OwnerId.ToString()
             };
@@ -23,7 +23,7 @@ namespace SocialNetworkApi.Services.Extensions
             {
                 Id = image.Id.ToString(),
                 Name = image.Name,
-                Extension = image.Extension.ToString().ToLowerInvariant(),
+                Extension = image.Type.ToString().ToLowerInvariant(),
                 Size = image.Data.LongLength.ToString(),
                 OwnerId = image.OwnerId.ToString()
             };
