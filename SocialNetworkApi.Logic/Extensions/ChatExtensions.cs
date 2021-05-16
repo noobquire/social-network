@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 
@@ -6,7 +7,7 @@ namespace SocialNetworkApi.Services.Extensions
 {
     public static class ChatExtensions
     {
-        public static ChatDto ToDto(this Chat chat)
+        public static ChatDto ToDto([NotNull] this Chat chat)
         {
             return new ChatDto
             {

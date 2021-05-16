@@ -2,11 +2,11 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using SocialNetworkApi.Attributes;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Controllers
 {
@@ -92,7 +92,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery][ValidateGuid] bool withDeleted = false)
+        public async Task<IActionResult> GetAll([FromQuery] bool withDeleted = false)
         {
             var users = await _usersService.GetAllAsync(withDeleted);
 

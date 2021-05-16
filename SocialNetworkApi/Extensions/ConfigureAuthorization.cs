@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +22,9 @@ namespace SocialNetworkApi.Extensions
             services.AddScoped<IAuthorizationHandler, SameProfileUserAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SameImageOwnerAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SamePostAuthorAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, ChatAdminAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, ChatParticipantAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, SameMessageAuthorAuthorizationHandler>();
             return services;
         }
 
@@ -67,6 +67,7 @@ namespace SocialNetworkApi.Extensions
                 options.AddPolicy("SameOrAdminUser", policy => policy.Requirements.Add(new SameUserRequirement(true)));
                 options.AddPolicy("SameUser", policy => policy.Requirements.Add(new SameUserRequirement(false)));
                 options.AddPolicy("ProfileOwner", policy => policy.Requirements.Add(new SameUserRequirement(false)));
+                options.AddPolicy("ChatParticipant", policy => policy.Requirements.Add(new ChatParticipantRequirement()));
             });
             return services;
         }

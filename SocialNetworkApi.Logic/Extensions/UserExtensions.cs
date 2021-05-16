@@ -1,11 +1,12 @@
-﻿using SocialNetworkApi.Data.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 
 namespace SocialNetworkApi.Services.Extensions
 {
     public static class UserExtensions
     {
-        public static UserDto ToDto(this User user)
+        public static UserDto ToDto([NotNull] this User user)
         {
             return new UserDto
             {

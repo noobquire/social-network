@@ -3,11 +3,11 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using SocialNetworkApi.Attributes;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Controllers
 {

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using SocialNetworkApi.Attributes;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Validation;

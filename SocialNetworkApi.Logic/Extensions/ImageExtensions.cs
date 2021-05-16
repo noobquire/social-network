@@ -1,11 +1,12 @@
-﻿using SocialNetworkApi.Data.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 
 namespace SocialNetworkApi.Services.Extensions
 {
     public static class ImageExtensions
     {
-        public static ImageDto ToDto(this Image image)
+        public static ImageDto ToDto([NotNull] this Image image)
         {
             return new ImageDto
             {
@@ -17,7 +18,7 @@ namespace SocialNetworkApi.Services.Extensions
             };
         }
 
-        public static ImageHeaderDto ToHeaderDto(this Image image)
+        public static ImageHeaderDto ToHeaderDto([NotNull] this Image image)
         {
             return new ImageHeaderDto
             {

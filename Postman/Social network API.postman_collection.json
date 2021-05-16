@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "User",
+			"name": "Users",
 			"item": [
 				{
 					"name": "Register user",
@@ -231,7 +231,7 @@
 			]
 		},
 		{
-			"name": "Profile",
+			"name": "Profiles",
 			"item": [
 				{
 					"name": "Get profile by Id",
@@ -601,6 +601,250 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Chats",
+			"item": [
+				{
+					"name": "Create group chat",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"chatId\", jsonData[\"id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"TestChat\",\r\n    \"ParticipantIds\": [\"{{adminUserId}}\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/chats",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get chat by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/chats/{{chatId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats",
+								"{{chatId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all chats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/chats",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leave chat by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/chats/{{chatId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats",
+								"{{chatId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Send message to chat",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"messageId\", jsonData[\"id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"This is a test message sent to chat!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{address}}/api/chats/{{chatId}}/messages",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats",
+								"{{chatId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get message by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats",
+								"{{chatId}}",
+								"messages",
+								"{{messageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all messages in chat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/chats/{{chatId}}/messages",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats",
+								"{{chatId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit message",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats",
+								"{{chatId}}",
+								"messages",
+								"{{messageId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete message by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
+							"protocol": "https",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"chats",
+								"{{chatId}}",
+								"messages",
+								"{{messageId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -635,38 +879,43 @@
 	],
 	"variable": [
 		{
-			"id": "4f0269af-f945-4940-82f0-2bcca0565945",
 			"key": "token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJhZG1pbkBzb2NpYWxuZXR3b3JrLmNvbSIsImp0aSI6IjBmNDFmMWJkLTdhMTctNGQzYy1iMjNkLWQ0ODNjNzRjNjIyYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNjE3Mjg1ODg1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYxOTU1IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0MjAwIn0.-hQ5VRdsB5EtC13ZGv_8yxi9HKJXjRRzNN9BiowKfZE"
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJqb2huZG9lMTA2QGdtYWlsLmNvbSIsImp0aSI6IjM0NGIwYTQ3LTYzODItNDcwZC05ZGNiLTI2OGIwYWNlNjBjYSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiODAxN2YyMjUtY2QxNi00ZTM2LTE5ZGMtMDhkOGY3NTA4M2JhIiwiZXhwIjoxNjIwNTcxMDQxLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjYxOTU1IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0MjAwIn0.mLrmCC6fQN00uHjsr-3_0aJ8rQx6PQfWTE_fkDzCl2Q"
 		},
 		{
-			"id": "5076fb22-e703-4490-bc71-b2588aed6e9a",
 			"key": "userId",
-			"value": ""
+			"value": "8017f225-cd16-4e36-19dc-08d8f75083ba"
 		},
 		{
-			"id": "61484f8f-6cd1-4d16-86d0-8b9a193ee204",
 			"key": "profileId",
-			"value": ""
+			"value": "73025779-61d5-48c1-8b1c-08d8f7508413"
 		},
 		{
-			"id": "a2a9d167-fabc-4455-bafb-08aae5466f78",
 			"key": "email",
-			"value": ""
+			"value": "johndoe106@gmail.com"
 		},
 		{
-			"id": "b3b2006d-2657-413a-a2ec-9c4149fd388f",
 			"key": "password",
-			"value": ""
+			"value": "Mysuperpassword123"
 		},
 		{
-			"id": "e02f001a-be25-45de-83c4-d6375dbf63d6",
 			"key": "imageId",
+			"value": "40674ae5-f4ed-4aad-e0c3-08d8fb374562"
+		},
+		{
+			"key": "postId",
+			"value": "53045f7e-da42-4307-dc05-08d9017ae315"
+		},
+		{
+			"key": "adminUserId",
+			"value": "3caa66f5-8169-4886-a10a-08d8f3b1beb7"
+		},
+		{
+			"key": "chatId",
 			"value": ""
 		},
 		{
-			"id": "155bd35b-962f-4d29-999d-e65b9fac201e",
-			"key": "postId",
+			"key": "messageId",
 			"value": ""
 		}
 	]
