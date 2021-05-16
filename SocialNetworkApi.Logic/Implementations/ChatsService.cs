@@ -81,13 +81,14 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<ChatDto> CreatePersonalAsync(string userId)
         {
-            var user = await _userManager.FindByEmailAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             var principal = _contextAccessor.HttpContext.User;
             var ownerUser = await _userManager.GetUserAsync(principal);
-            var existingChat = await _unitOfWork.Chats
+            var existingChat = (await _unitOfWork.Chats
                 .QueryAsync(c => c.Type == ChatType.Personal && 
                                  c.Participants.Any(uc => uc.UserId.ToString() == userId) 
-                                 && c.Participants.Any(uc => uc.UserId == ownerUser.Id));
+                                 && c.Participants.Any(uc => uc.UserId == ownerUser.Id)))
+                .FirstOrDefault();
             if(existingChat != null)
             {
                 throw new ItemAlreadyExistsException("Personal chat with this user already exists");
@@ -117,9 +118,7 @@ namespace SocialNetworkApi.Services.Implementations
             };
 
             chat.Participants.Add(firstParticipant);
-            ownerUser.Chats.Add(firstParticipant);
             chat.Participants.Add(secondParticipant);
-            ownerUser.Chats.Add(secondParticipant);
 
             await _unitOfWork.SaveChangesAsync();
 

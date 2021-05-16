@@ -18,26 +18,39 @@ namespace SocialNetworkApi.Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IChatsService _chatsService;
         private readonly UserManager<User> _userManager;
 
-        public MessagesService(IUnitOfWork unitOfWork, UserManager<User> userManager, IHttpContextAccessor contextAccessor)
+        public MessagesService(IUnitOfWork unitOfWork, UserManager<User> userManager, IHttpContextAccessor contextAccessor, IChatsService chatsService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _contextAccessor = contextAccessor;
+            _chatsService = chatsService;
         }
 
-        public async Task<MessageDto> SendMessageAsync(string chatId, MessageDataModel messageData)
+        public async Task<MessageDto> SendGroupMessageAsync(string chatId, MessageDataModel messageData)
         {
-            var principal = _contextAccessor.HttpContext.User;
-            var ownerUser = await _userManager.GetUserAsync(principal);
-
             var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
 
             if(chat == null)
             {
                 throw new ItemNotFoundException("Specified chat was not found");
             }
+
+            if (chat.Type != ChatType.Group)
+            {
+                throw new InvalidOperationException("Specified chat is not a group");
+            }
+
+            return await SendMessageInternalAsync(chatId, messageData);
+        }
+
+        private async Task<MessageDto> SendMessageInternalAsync(string chatId, MessageDataModel messageData)
+        {
+            var principal = _contextAccessor.HttpContext.User;
+            var ownerUser = await _userManager.GetUserAsync(principal);
+            var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
 
             if (messageData.ReplyToId != null)
             {
@@ -60,6 +73,31 @@ namespace SocialNetworkApi.Services.Implementations
             await _unitOfWork.Messages.CreateAsync(message);
 
             return message.ToDto();
+        }
+
+        public async Task<MessageDto> SendPersonalMessageAsync(string userId, MessageDataModel messageData)
+        {
+            var otherUser = await _unitOfWork.Users.GetByIdAsync(userId);
+            if(otherUser == null)
+            {
+                throw new ItemNotFoundException("User not found");
+            }
+
+            // Find chat with user, or create new one
+            var chatWithUser = await GetChatWithUser(userId) 
+                               ?? await _chatsService.CreatePersonalAsync(userId);
+
+            return await SendMessageInternalAsync(chatWithUser.Id, messageData);
+        }
+
+        private async Task<ChatDto> GetChatWithUser(string userId)
+        {
+            return (await _unitOfWork.Chats.QueryAsync(c =>
+                    c.Participants
+                        .Any(p =>
+                            p.UserId.ToString() == userId)
+                            && c.Type == ChatType.Personal))
+                .FirstOrDefault()?.ToDto();
         }
 
         public async Task<bool> DeleteMessageAsync(string messageId)
@@ -104,12 +142,18 @@ namespace SocialNetworkApi.Services.Implementations
             return message.ToDto();
         }
 
-        public async Task<IEnumerable<MessageDto>> GetChatMessagesAsync(string chatId)
+        public async Task<IEnumerable<MessageDto>> GetGroupMessagesAsync(string chatId)
         {
             return (await _unitOfWork.Messages
                     .QueryAsync(m =>
                         m.ChatId.ToString() == chatId))
                 .Select(m => m.ToDto());
+        }
+
+        public async Task<IEnumerable<MessageDto>> GetPersonalMessagesAsync(string userId)
+        {
+            var chatWithUser = await GetChatWithUser(userId);
+            return await GetGroupMessagesAsync(chatWithUser.Id);
         }
 
         public async Task<MessageDto> GetMessageByIdAsync(string messageId)
