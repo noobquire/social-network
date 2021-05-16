@@ -4,9 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SocialNetworkApi.Data;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Middleware;
 using SocialNetworkApi.Services.Interfaces;
@@ -51,6 +53,7 @@ namespace SocialNetworkApi
                 app.UseDeveloperExceptionPage();
             }
 
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -65,8 +68,20 @@ namespace SocialNetworkApi
             {
                 endpoints.MapControllers();
             });
-
+            if (env.IsProduction())
+            {
+                CreateDatabase(app);
+            }
+            
             CreateAdminUser(app.ApplicationServices).Wait();
+        }
+
+        private void CreateDatabase(IApplicationBuilder app)
+        {
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using var serviceScope = serviceScopeFactory.CreateScope();
+            var dbContext = serviceScope.ServiceProvider.GetService<SocialNetworkDbContext>();
+            dbContext.Database.EnsureCreated();
         }
 
         private async Task CreateAdminUser(IServiceProvider serviceProvider)
