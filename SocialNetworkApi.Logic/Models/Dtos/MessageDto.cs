@@ -13,5 +13,7 @@ namespace SocialNetworkApi.Services.Models.Dtos
         public DateTime TimePublished { get; set; }
 
         public string ReplyToId { get; set; }
+
+        public string ChatId { get; set; }
     }
 }

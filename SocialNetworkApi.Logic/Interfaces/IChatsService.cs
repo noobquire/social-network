@@ -12,5 +12,6 @@ namespace SocialNetworkApi.Services.Interfaces
         Task<ChatDto> GetByIdAsync(string chatId);
         Task<IEnumerable<ChatDto>> GetUserChats();
         Task<bool> LeaveChatAsync(string chatId);
+        Task<bool> IsAdmin(string userId, string chatId);
     }
 }

@@ -92,7 +92,7 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery][ValidateGuid] bool withDeleted = false)
+        public async Task<IActionResult> GetAll([FromQuery] bool withDeleted = false)
         {
             var users = await _usersService.GetAllAsync(withDeleted);
 

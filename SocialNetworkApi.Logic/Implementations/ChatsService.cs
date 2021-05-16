@@ -160,5 +160,13 @@ namespace SocialNetworkApi.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> IsAdmin(string userId, string chatId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
+
+            return chat.Participants.Any(uc => uc.UserId == user.Id && uc.IsAdmin);
+        }
     }
 }

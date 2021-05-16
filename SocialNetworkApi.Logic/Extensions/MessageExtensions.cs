@@ -16,7 +16,8 @@ namespace SocialNetworkApi.Services.Extensions
                 AuthorId = message.AuthorId.ToString(),
                 ReplyToId = message.ReplyTo?.Id.ToString(),
                 Text = message.Text,
-                TimePublished = message.TimePublished
+                TimePublished = message.TimePublished,
+                ChatId = message.ChatId.ToString()
             };
         }
 
