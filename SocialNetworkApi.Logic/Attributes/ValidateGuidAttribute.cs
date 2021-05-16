@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace SocialNetworkApi.Attributes
+namespace SocialNetworkApi.Services.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
     public class ValidateGuidAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (!(value is string id))
             {

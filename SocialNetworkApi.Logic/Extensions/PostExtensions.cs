@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
@@ -7,7 +8,7 @@ namespace SocialNetworkApi.Services.Extensions
 {
     public static class PostExtensions
     {
-        public static PostDto ToDto(this Post post)
+        public static PostDto ToDto([NotNull] this Post post)
         {
             return new PostDto()
             {
@@ -20,7 +21,7 @@ namespace SocialNetworkApi.Services.Extensions
             };
         }
 
-        public static Post Update(this Post post, PostDataModel data)
+        public static Post Update([NotNull] this Post post, [NotNull] PostDataModel data)
         {
             post.AttachedImageId = data.AttachedImageId == null ? post.AttachedImageId : new Guid(data.AttachedImageId);
             post.Text = data.Text ?? post.Text;

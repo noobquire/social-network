@@ -41,6 +41,12 @@ namespace SocialNetworkApi.Data
                 .HasOne(m => m.Chat)
                 .WithMany(c => c.Messages)
                 .HasForeignKey(m => m.ChatId);
+            builder.Entity<Message>()
+                .HasOne(m => m.ReplyTo)
+                .WithMany()
+                .HasForeignKey(m => m.ReplyToId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.Entity<Post>()
                 .HasOne(p => p.Profile)
