@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using SocialNetworkApi.Services.Attributes;
+using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Services.Models
 {
@@ -9,7 +9,7 @@ namespace SocialNetworkApi.Services.Models
         [StringLength(2000, ErrorMessage = "Max message length is 2000 characters.")]
         public string Text { get; set; }
 
-        [ValidateGuid]
+        [ValidateGuid(required: false)]
         public string ReplyToId { get; set; }
     }
 }

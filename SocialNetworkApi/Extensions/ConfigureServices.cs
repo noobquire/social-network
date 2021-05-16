@@ -13,6 +13,7 @@ namespace SocialNetworkApi.Extensions
             services.AddScoped<IImagesService, ImagesService>();
             services.AddScoped<IPostsService, PostsService>();
             services.AddScoped<IChatsService, ChatsService>();
+            services.AddScoped<IMessagesService, MessagesService>();
             return services;
         }
     }

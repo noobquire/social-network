@@ -7,9 +7,10 @@ namespace SocialNetworkApi.Services.Interfaces
 {
     public interface IMessagesService
     {
-        Task<MessageDto> SendMessage(string chatId, MessageDataModel messageData);
-        Task<bool> DeleteMessage(string messageId);
-        Task<bool> EditMessage(string messageId, MessageDataModel messageData);
-        Task<IEnumerable<MessageDto>> GetChatMessages(string chatId);
+        Task<MessageDto> SendMessageAsync(string chatId, MessageDataModel messageData);
+        Task<bool> DeleteMessageAsync(string messageId);
+        Task<MessageDto> EditMessageAsync(string messageId, MessageDataModel messageData);
+        Task<IEnumerable<MessageDto>> GetChatMessagesAsync(string chatId);
+        Task<MessageDto> GetMessageByIdAsync(string messageId);
     }
 }

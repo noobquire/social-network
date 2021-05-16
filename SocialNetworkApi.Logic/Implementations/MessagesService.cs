@@ -27,12 +27,17 @@ namespace SocialNetworkApi.Services.Implementations
             _contextAccessor = contextAccessor;
         }
 
-        public async Task<MessageDto> SendMessage(string chatId, MessageDataModel messageData)
+        public async Task<MessageDto> SendMessageAsync(string chatId, MessageDataModel messageData)
         {
             var principal = _contextAccessor.HttpContext.User;
             var ownerUser = await _userManager.GetUserAsync(principal);
 
             var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
+
+            if(chat == null)
+            {
+                throw new ItemNotFoundException("Specified chat was not found");
+            }
 
             if (messageData.ReplyToId != null)
             {
@@ -57,7 +62,7 @@ namespace SocialNetworkApi.Services.Implementations
             return message.ToDto();
         }
 
-        public async Task<bool> DeleteMessage(string messageId)
+        public async Task<bool> DeleteMessageAsync(string messageId)
         {
             var message = await _unitOfWork.Messages.GetByIdAsync(messageId);
 
@@ -70,13 +75,13 @@ namespace SocialNetworkApi.Services.Implementations
             return true;
         }
 
-        public async Task<bool> EditMessage(string messageId, MessageDataModel messageData)
+        public async Task<MessageDto> EditMessageAsync(string messageId, MessageDataModel messageData)
         {
             var message = await _unitOfWork.Messages.GetByIdAsync(messageId);
 
             if (message == null)
             {
-                return false;
+                throw new ItemNotFoundException("Message not found");
             }
 
             if (messageData.ReplyToId != null)
@@ -86,21 +91,30 @@ namespace SocialNetworkApi.Services.Implementations
                 {
                     throw new ItemNotFoundException("Message reply target was not found in this chat");
                 }
+
+                if (reply.TimePublished > message.TimePublished)
+                {
+                    throw new InvalidOperationException("Message reply target must be published before this message");
+                }
             }
 
-            message.ReplyToId = messageData.ReplyToId == null ? null : new Guid?(new Guid(messageData.ReplyToId));
-            message.Text = messageData.Text;
+            message.Update(messageData);
 
             await _unitOfWork.Messages.UpdateAsync(message);
-            return true;
+            return message.ToDto();
         }
 
-        public async Task<IEnumerable<MessageDto>> GetChatMessages(string chatId)
+        public async Task<IEnumerable<MessageDto>> GetChatMessagesAsync(string chatId)
         {
             return (await _unitOfWork.Messages
                     .QueryAsync(m =>
                         m.ChatId.ToString() == chatId))
                 .Select(m => m.ToDto());
+        }
+
+        public async Task<MessageDto> GetMessageByIdAsync(string messageId)
+        {
+            return (await _unitOfWork.Messages.GetByIdAsync(messageId))?.ToDto();
         }
     }
 }

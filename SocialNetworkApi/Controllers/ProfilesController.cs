@@ -3,9 +3,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using SocialNetworkApi.Models;
-using SocialNetworkApi.Services.Attributes;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models.Dtos;
+using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Controllers
 {
