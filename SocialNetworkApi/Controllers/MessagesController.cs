@@ -81,17 +81,29 @@ namespace SocialNetworkApi.Controllers
         public async Task<IActionResult> GetGroupMessages([Required][ValidateGuid][FromRoute] string chatId)
         {
             // TODO: Validate if user is chat participant
-            var messages = await _messagesService.GetGroupMessagesAsync(chatId);
+            try
+            {
+                var messages = await _messagesService.GetGroupMessagesAsync(chatId);
 
-            return Ok(messages);
+                return Ok(messages);
+            } catch (ItemNotFoundException e)
+            {
+                return NotFound(new ApiError(e.Message, HttpStatusCode.NotFound));
+            }
         }
 
         [HttpGet("/api/users/{userId}/messages")]
         public async Task<IActionResult> GetPersonalMessages([Required][ValidateGuid][FromRoute] string userId)
         {
-            var messages = await _messagesService.GetPersonalMessagesAsync(userId);
-
-            return Ok(messages);
+            try
+            {
+                var messages = await _messagesService.GetPersonalMessagesAsync(userId);
+                return Ok(messages);
+            }
+            catch (ItemNotFoundException e)
+            {
+                return NotFound(new ApiError(e.Message, HttpStatusCode.NotFound));
+            }
         }
 
         [HttpDelete]

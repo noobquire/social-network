@@ -160,10 +160,5 @@ namespace SocialNetworkApi.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
-
-        public Task<bool> EditChatAsync(string chatId, ChatDto chatData)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

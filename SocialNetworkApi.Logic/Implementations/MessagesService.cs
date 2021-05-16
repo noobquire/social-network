@@ -33,7 +33,7 @@ namespace SocialNetworkApi.Services.Implementations
         {
             var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
 
-            if(chat == null)
+            if (chat == null)
             {
                 throw new ItemNotFoundException("Specified chat was not found");
             }
@@ -78,13 +78,13 @@ namespace SocialNetworkApi.Services.Implementations
         public async Task<MessageDto> SendPersonalMessageAsync(string userId, MessageDataModel messageData)
         {
             var otherUser = await _unitOfWork.Users.GetByIdAsync(userId);
-            if(otherUser == null)
+            if (otherUser == null)
             {
                 throw new ItemNotFoundException("User not found");
             }
 
             // Find chat with user, or create new one
-            var chatWithUser = await GetChatWithUser(userId) 
+            var chatWithUser = await GetChatWithUser(userId)
                                ?? await _chatsService.CreatePersonalAsync(userId);
 
             return await SendMessageInternalAsync(chatWithUser.Id, messageData);
@@ -92,6 +92,11 @@ namespace SocialNetworkApi.Services.Implementations
 
         private async Task<ChatDto> GetChatWithUser(string userId)
         {
+            var user = await _unitOfWork.Users.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ItemNotFoundException("User not found");
+            }
             return (await _unitOfWork.Chats.QueryAsync(c =>
                     c.Participants
                         .Any(p =>
@@ -144,6 +149,12 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<IEnumerable<MessageDto>> GetGroupMessagesAsync(string chatId)
         {
+            var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
+            if (chat == null)
+            {
+                throw new ItemNotFoundException("Chat not found");
+            }
+
             return (await _unitOfWork.Messages
                     .QueryAsync(m =>
                         m.ChatId.ToString() == chatId))

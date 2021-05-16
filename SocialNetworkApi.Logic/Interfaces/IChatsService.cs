@@ -12,6 +12,5 @@ namespace SocialNetworkApi.Services.Interfaces
         Task<ChatDto> GetByIdAsync(string chatId);
         Task<IEnumerable<ChatDto>> GetUserChats();
         Task<bool> LeaveChatAsync(string chatId);
-        Task<bool> EditChatAsync(string chatId, ChatDto chatData);
     }
 }
