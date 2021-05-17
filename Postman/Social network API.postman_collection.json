@@ -39,8 +39,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/users/register",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/register",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -75,7 +75,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"Email\": \"johndoe106@gmail.com\",\r\n    \"Password\": \"Mysuperpassword123\"\r\n}",
+							"raw": "{\r\n    \"Email\": \"johndoe101@gmail.com\",\r\n    \"Password\": \"Mysuperpassword123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -83,8 +83,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/users/login",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/login",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -127,8 +127,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/users/login",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/login",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -147,8 +147,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/users/{{userId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/{{userId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -167,15 +167,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/users/?withDeleted=true",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users?withDeleted=true",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
 							"path": [
 								"api",
-								"users",
-								""
+								"users"
 							],
 							"query": [
 								{
@@ -193,8 +192,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/users/{{userId}}/reinstate",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/{{userId}}/reinstate",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -214,8 +213,8 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/users/{{userId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/{{userId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -239,8 +238,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/profiles/{{profileId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles/{{profileId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -268,8 +267,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/profiles",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -287,8 +286,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/profiles",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -336,8 +335,8 @@
 							]
 						},
 						"url": {
-							"raw": "https://{{address}}/api/images",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/images",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -355,8 +354,8 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/images/{{imageId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/images/{{imageId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -375,8 +374,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/images/{{imageId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/images/{{imageId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -395,8 +394,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/images/{{imageId}}/header",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/images/{{imageId}}/header",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -416,8 +415,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/users/{{userId}}/images/headers",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/{{userId}}/images/headers",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -438,8 +437,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/users/{{userId}}/images/",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/users/{{userId}}/images/",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -489,8 +488,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles/{{profileId}}/posts",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -510,8 +509,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles/{{profileId}}/posts",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -531,8 +530,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -553,8 +552,8 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -584,8 +583,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/profiles/{{profileId}}/posts/{{postId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -635,8 +634,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/chats",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/chats",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -654,8 +653,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/chats/{{chatId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/chats/{{chatId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -713,7 +712,7 @@
 			"name": "Messages",
 			"item": [
 				{
-					"name": "Send message to chat",
+					"name": "Send message to group chat",
 					"event": [
 						{
 							"listen": "test",
@@ -742,8 +741,8 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{address}}/api/chats/{{chatId}}/messages",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/chats/{{chatId}}/messages",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -758,13 +757,43 @@
 					"response": []
 				},
 				{
+					"name": "Send message to user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Hello, this is a reply from admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{address}}/api/users/{{adminUserId}}/messages",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{adminUserId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get message by Id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -780,20 +809,41 @@
 					"response": []
 				},
 				{
-					"name": "Get all messages in chat",
+					"name": "Get all messages in group chat",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/chats/{{chatId}}/messages",
+							"raw": "{{protocol}}://{{address}}/api/users/{{adminUserId}}/messages",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{address}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{adminUserId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all personal messages with user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{address}}/api/users/{{adminUserId}}/messages",
 							"protocol": "https",
 							"host": [
 								"{{address}}"
 							],
 							"path": [
 								"api",
-								"chats",
-								"{{chatId}}",
+								"users",
+								"{{adminUserId}}",
 								"messages"
 							]
 						}
@@ -805,9 +855,18 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"This message text was edited...\",\r\n    \"replyToId\": \"5d0e7db0-2c81-4da2-6a9e-08d91864287c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "https://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -828,8 +887,8 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
-							"protocol": "https",
+							"raw": "{{protocol}}://{{address}}/api/chats/{{chatId}}/messages/{{messageId}}",
+							"protocol": "{{protocol}}",
 							"host": [
 								"{{address}}"
 							],
@@ -888,7 +947,7 @@
 		},
 		{
 			"key": "profileId",
-			"value": "73025779-61d5-48c1-8b1c-08d8f7508413"
+			"value": "282e5728-1a6a-4eca-9cdf-ed41e7758b33"
 		},
 		{
 			"key": "email",
