@@ -25,6 +25,13 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish -c Release -o deploy -r linux-arm /p:EnvironmentName=Production
+    - name: Remove old files
+      uses: appleboy/ssh-action@master
+      with: 
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.REMOTE_SSH_KEY }}
+        script: sudo rm -rf ${{ secrets.REMOTE_TARGET }}/github
     - name: Copy via ssh
       uses: appleboy/scp-action@master
       with:
