@@ -18,9 +18,8 @@ namespace SocialNetworkApi.Data.Repositories
 
         public async Task<TEntity> GetByIdAsync(string id)
         {
-            return await Context
-                .Set<TEntity>()
-                .FirstOrDefaultAsync(e => e.Id.ToString() == id);
+            return (await GetAllAsync())
+                .FirstOrDefault(e => e.Id.ToString() == id);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -32,9 +31,7 @@ namespace SocialNetworkApi.Data.Repositories
 
         public async Task<IEnumerable<TEntity>> QueryAsync(Func<TEntity, bool> predicate)
         {
-            return (await Context
-                    .Set<TEntity>()
-                    .ToListAsync())
+            return (await GetAllAsync())
                 .Where(predicate);
         }
 
