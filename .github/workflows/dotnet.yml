@@ -24,7 +24,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish -c Release -o deploy -r linux-arm /p:EnvironmentName=Production
+      run: dotnet publish -c Release -o deploy -r linux-arm /p:EnvironmentName=Production --self-contained false
     - name: Stop API
       uses: appleboy/ssh-action@master
       with: 
