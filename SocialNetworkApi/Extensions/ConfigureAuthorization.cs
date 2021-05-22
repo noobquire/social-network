@@ -28,13 +28,39 @@ namespace SocialNetworkApi.Extensions
             return services;
         }
 
-        public static IServiceCollection AddAuthorizationConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentity<User, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<SocialNetworkDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Adding Authentication  
+            // Adding Authentication 
+            services.AddAuthenticationConfiguration(configuration);
+            
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
+            });
+            services.AddPolicies();
+            
+            return services;
+        }
+
+        public static IServiceCollection AddPolicies(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SameOrAdminUser", policy => policy.Requirements.Add(new SameUserRequirement(true)));
+                options.AddPolicy("SameUser", policy => policy.Requirements.Add(new SameUserRequirement(false)));
+                options.AddPolicy("ProfileOwner", policy => policy.Requirements.Add(new SameUserRequirement(false)));
+                options.AddPolicy("ChatParticipant", policy => policy.Requirements.Add(new ChatParticipantRequirement()));
+            });
+            return services;
+        }
+
+        public static IServiceCollection AddAuthenticationConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -56,19 +82,6 @@ namespace SocialNetworkApi.Extensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
                     };
                 });
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-                options.Password.RequireNonAlphanumeric = false;
-            });
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("SameOrAdminUser", policy => policy.Requirements.Add(new SameUserRequirement(true)));
-                options.AddPolicy("SameUser", policy => policy.Requirements.Add(new SameUserRequirement(false)));
-                options.AddPolicy("ProfileOwner", policy => policy.Requirements.Add(new SameUserRequirement(false)));
-                options.AddPolicy("ChatParticipant", policy => policy.Requirements.Add(new ChatParticipantRequirement()));
-            });
             return services;
         }
     }
