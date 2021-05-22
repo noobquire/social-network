@@ -15,8 +15,8 @@ namespace SocialNetworkApi.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -30,18 +30,18 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
+                        .HasName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
@@ -158,8 +158,8 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -177,24 +177,24 @@ namespace SocialNetworkApi.Data.Migrations
 
                     b.Property<byte[]>("Data")
                         .IsRequired()
-                        .HasMaxLength(10000000)
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("varbinary(max)")
+                        .HasMaxLength(10000000);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(10);
 
                     b.HasKey("Id");
 
@@ -223,8 +223,8 @@ namespace SocialNetworkApi.Data.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
 
                     b.Property<DateTime>("TimePublished")
                         .HasColumnType("datetime2");
@@ -260,8 +260,8 @@ namespace SocialNetworkApi.Data.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
 
                     b.Property<DateTime>("TimePublished")
                         .HasColumnType("datetime2");
@@ -290,8 +290,8 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Status")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -320,24 +320,24 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -346,12 +346,12 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -369,17 +369,17 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
+                        .HasName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
+                        .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
@@ -459,8 +459,6 @@ namespace SocialNetworkApi.Data.Migrations
                     b.HasOne("SocialNetworkApi.Data.Models.User", "Owner")
                         .WithMany("Images")
                         .HasForeignKey("OwnerId");
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("SocialNetworkApi.Data.Models.Message", b =>
@@ -480,12 +478,6 @@ namespace SocialNetworkApi.Data.Migrations
                     b.HasOne("SocialNetworkApi.Data.Models.Message", "ReplyTo")
                         .WithMany()
                         .HasForeignKey("ReplyToId");
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("ReplyTo");
                 });
 
             modelBuilder.Entity("SocialNetworkApi.Data.Models.Post", b =>
@@ -506,12 +498,6 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AttachedImage");
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("SocialNetworkApi.Data.Models.Profile", b =>
@@ -526,10 +512,6 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasForeignKey("SocialNetworkApi.Data.Models.Profile", "UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Avatar");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SocialNetworkApi.Data.Models.UserChat", b =>
@@ -545,35 +527,6 @@ namespace SocialNetworkApi.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SocialNetworkApi.Data.Models.Chat", b =>
-                {
-                    b.Navigation("Messages");
-
-                    b.Navigation("Participants");
-                });
-
-            modelBuilder.Entity("SocialNetworkApi.Data.Models.Profile", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("SocialNetworkApi.Data.Models.User", b =>
-                {
-                    b.Navigation("Chats");
-
-                    b.Navigation("Images");
-
-                    b.Navigation("Messages");
-
-                    b.Navigation("Posts");
-
-                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }
