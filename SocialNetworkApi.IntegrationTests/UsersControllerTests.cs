@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SocialNetworkApi.Data;
 using SocialNetworkApi.Data.Interfaces;
+using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 
@@ -26,7 +26,7 @@ namespace SocialNetworkApi.IntegrationTests
         private Mock<IUnitOfWork> _unitOfWork;
 
         [OneTimeSetUp]
-        public void OneTimeSetup()
+        public void Setup()
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Test");
             _factory = new WebApplicationFactory<Startup>();
@@ -35,13 +35,17 @@ namespace SocialNetworkApi.IntegrationTests
             {
                 builder.ConfigureTestServices(services =>
                 {
+                    services.AddAuthentication(options =>
+                    {
+                        options.DefaultAuthenticateScheme = "Test";
+                        options.DefaultChallengeScheme = "Test";
+                        options.DefaultScheme = "Test";
+                    }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                            "Test", options => { });
+                    services.AddControllers().AddApplicationPart(typeof(Startup).Assembly);
                 });
             }).CreateClient();
-        }
 
-        [Test]
-        public async Task Register_ReturnsRegisteredUser()
-        {
             var register = new UserRegisterModel
             {
                 FirstName = "John",
@@ -51,10 +55,43 @@ namespace SocialNetworkApi.IntegrationTests
                 Password = "testPassword123"
             };
 
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+                userService.RegisterAsync(register).Wait();
+            }
+
+            _client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Test");
+        }
+
+        [OneTimeTearDown]
+        public void Teardown()
+        {
+            _client.Dispose();
+            _factory.Dispose();
+        }
+
+        [Test]
+        public async Task Register_ReturnsRegisteredUser()
+        {
+            // Arrange
+            var register = new UserRegisterModel
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Username = "johndoe",
+                Email = "john.doe1@email.com",
+                Password = "testPassword123"
+            };
+
             var content = new StringContent(JsonConvert.SerializeObject(register));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
+            // Act
             var response = await _client.PostAsync("/api/users/register", content);
+
+            // Assert
             response.EnsureSuccessStatusCode();
 
             var resultString = await response.Content.ReadAsStringAsync();
@@ -63,5 +100,94 @@ namespace SocialNetworkApi.IntegrationTests
             result.Id.Should().NotBeNullOrWhiteSpace();
             result.Email.Should().Be(register.Email);
         }
+
+        [Test]
+        public async Task Login_ReturnsJwtToken()
+        {
+            // Arrange
+            var login = new LoginModel
+            {
+                Email = "john.doe@email.com",
+                Password = "testPassword123"
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(login));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            // Act
+            var response = await _client.PostAsync("/api/users/login", content);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+            var resultString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<JwtToken>(resultString);
+
+            result.Token.Should().NotBeNullOrWhiteSpace();
+            result.ExpirationTime.Should().BeAfter(DateTime.UtcNow);
+        }
+
+        [Test]
+        public async Task GetById_ReturnsUser()
+        {
+            // Arrange
+            using var scope = _factory.Services.CreateScope();
+            var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+            var user = await userService.GetByEmailAsync("john.doe@email.com");
+
+            // Act
+            var response = await _client.GetAsync($"/api/users/{user.Id}");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+            var resultString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<UserDto>(resultString);
+
+            result.Should().BeEquivalentTo(user);
+        }
+
+        [Test]
+        public async Task GetAll_ReturnsUserList()
+        {
+            // Act
+            var response = await _client.GetAsync($"/api/users");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+            var resultString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(resultString);
+
+            result.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public async Task DeleteById_SoftDeletesUser()
+        {
+            // Arrange
+            using var scope = _factory.Services.CreateScope();
+            var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+            var registerUser = new UserRegisterModel()
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Username = "deleteName",
+                Email = "john.doe_delete@email.com",
+                Password = "testPassword123"
+            };
+            var user = await userService.RegisterAsync(registerUser);
+
+            // Act
+            var response = await _client.DeleteAsync($"/api/users/{user.Id}");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+
+            var result = await userService.GetAllAsync();
+            result.Should().NotContain(user);
+        }
+
+
     }
 }

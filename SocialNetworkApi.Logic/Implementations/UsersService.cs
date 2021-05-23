@@ -131,7 +131,10 @@ namespace SocialNetworkApi.Services.Implementations
 
             await _userManager.UpdateAsync(user);
             await _userManager.SetLockoutEnabledAsync(user, true);
-            await _profilesService.DeleteByIdAsync(user.Profile.Id.ToString());
+            if(user.Profile != null)
+            {
+                await _profilesService.DeleteByIdAsync(user.Profile.Id.ToString());
+            }
 
             return true;
         }
