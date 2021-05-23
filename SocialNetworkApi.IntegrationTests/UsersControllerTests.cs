@@ -8,10 +8,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
@@ -23,14 +21,12 @@ namespace SocialNetworkApi.IntegrationTests
     {
         private WebApplicationFactory<Startup> _factory;
         private HttpClient _client;
-        private Mock<IUnitOfWork> _unitOfWork;
 
         [OneTimeSetUp]
         public void Setup()
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Test");
             _factory = new WebApplicationFactory<Startup>();
-            _unitOfWork = new Mock<IUnitOfWork>();
             _client = _factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureTestServices(services =>
