@@ -159,7 +159,10 @@ namespace SocialNetworkApi.Services.Implementations
             user.IsDeleted = false;
             await _userManager.UpdateAsync(user);
             await _userManager.SetLockoutEnabledAsync(user, false);
-            await _profilesService.ReinstateAsync(user.Profile.Id.ToString());
+            if(user.Profile != null)
+            {
+                await _profilesService.ReinstateAsync(user.Profile.Id.ToString());
+            }
 
             return true;
         }

@@ -166,28 +166,68 @@ namespace SocialNetworkApi.IntegrationTests
         public async Task DeleteById_SoftDeletesUser()
         {
             // Arrange
-            using var scope = _factory.Services.CreateScope();
-            var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
-            var registerUser = new UserRegisterModel()
+            string userId;
+            using (var scope = _factory.Services.CreateScope())
             {
-                FirstName = "John",
-                LastName = "Doe",
-                Username = "deleteName",
-                Email = "john.doe_delete@email.com",
-                Password = "testPassword123"
-            };
-            var user = await userService.RegisterAsync(registerUser);
-
+                var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+                var registerUser = new UserRegisterModel()
+                {
+                    FirstName = "John",
+                    LastName = "Doe",
+                    Username = "deleteName",
+                    Email = "john.doe_delete@email.com",
+                    Password = "testPassword123"
+                };
+                var user = await userService.RegisterAsync(registerUser);
+                userId = user.Id;
+            }
+            
             // Act
-            var response = await _client.DeleteAsync($"/api/users/{user.Id}");
+            var response = await _client.DeleteAsync($"/api/users/{userId}");
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+                var result = await userService.GetByIdAsync(userId);
+                result.IsDeleted.Should().BeTrue();
+            }
+        }
+
+        [Test]
+        public async Task ReinstateById_ReinstatesUser()
+        {
+            string userId;
+            // Arrange
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+                var registerUser = new UserRegisterModel()
+                {
+                    FirstName = "John",
+                    LastName = "Doe",
+                    Username = "reinstateName",
+                    Email = "john.doe_reinstate@email.com",
+                    Password = "testPassword123"
+                };
+                var user = await userService.RegisterAsync(registerUser);
+                userId = user.Id;
+                await userService.DeleteByIdAsync(user.Id);
+            }
+            
+            // Act
+            var response = await _client.GetAsync($"/api/users/{userId}/reinstate");
 
             // Assert
             response.EnsureSuccessStatusCode();
 
-            var result = await userService.GetAllAsync();
-            result.Should().NotContain(user);
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var userService = scope.ServiceProvider.GetRequiredService<IUsersService>();
+                var result = await userService.GetByIdAsync(userId);
+                result.IsDeleted.Should().BeFalse();
+            }
         }
-
-
     }
 }
