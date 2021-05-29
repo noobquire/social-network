@@ -39,6 +39,16 @@ namespace SocialNetworkApi.Extensions
             return services;
         }
 
+        public static IServiceCollection AddTestDataAccess(this IServiceCollection services)
+        {
+            services.AddDbContext<SocialNetworkDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("InMemoryDbForTesting");
+            })
+            .AddRepositories();
+            return services;
+        }
+
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IRepository<User>, UserRepository>();

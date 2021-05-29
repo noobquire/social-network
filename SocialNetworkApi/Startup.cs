@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -36,13 +35,17 @@ namespace SocialNetworkApi
             {
                 services.AddProductionDataAccess(Configuration);
             }
+            else if (Environment.IsEnvironment("Test"))
+            {
+                services.AddTestDataAccess();
+            }
             else
             {
                 services.AddDevelopmentDataAccess(Configuration);
             }
             services.AddServices();
             services.AddAuthorizationHandlers();
-            services.AddAuthorizationConfiguration(Configuration);
+            services.AddIdentityConfiguration(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,7 +75,7 @@ namespace SocialNetworkApi
             {
                 CreateDatabase(app);
             }
-            
+
             CreateAdminUser(app.ApplicationServices).Wait();
         }
 
@@ -81,7 +84,7 @@ namespace SocialNetworkApi
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             using var serviceScope = serviceScopeFactory.CreateScope();
             var dbContext = serviceScope.ServiceProvider.GetService<SocialNetworkDbContext>();
-            dbContext.Database.EnsureCreated();
+            dbContext?.Database.EnsureCreated();
         }
 
         private async Task CreateAdminUser(IServiceProvider serviceProvider)

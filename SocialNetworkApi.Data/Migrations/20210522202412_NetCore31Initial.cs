@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SocialNetworkApi.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class NetCore31Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,10 +11,10 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -25,23 +25,24 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(maxLength: 50, nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,7 +53,10 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "Chats",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,28 +64,14 @@ namespace SocialNetworkApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Images",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Extension = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Data = table.Column<byte[]>(type: "varbinary(max)", maxLength: 10000000, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Images", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RoleId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,11 +88,11 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<Guid>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,10 +109,10 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,8 +129,8 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(nullable: false),
+                    RoleId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -163,10 +153,10 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<Guid>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -180,15 +170,38 @@ namespace SocialNetworkApi.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Type = table.Column<string>(maxLength: 10, nullable: false),
+                    Data = table.Column<byte[]>(maxLength: 10000000, nullable: false),
+                    OwnerId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    TimePublished = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ChatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReplyToId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Id = table.Column<Guid>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    AuthorId = table.Column<Guid>(nullable: false),
+                    Text = table.Column<string>(maxLength: 2000, nullable: false),
+                    TimePublished = table.Column<DateTime>(nullable: false),
+                    ChatId = table.Column<Guid>(nullable: false),
+                    ReplyToId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -217,22 +230,23 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "UserChat",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ChatId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<Guid>(nullable: false),
+                    ChatId = table.Column<Guid>(nullable: false),
+                    IsAdmin = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserChat", x => new { x.ChatId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_UserChat_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_UserChat_Chats_ChatId",
                         column: x => x.ChatId,
                         principalTable: "Chats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserChat_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -241,9 +255,11 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "Profiles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    AvatarId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Id = table.Column<Guid>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Status = table.Column<string>(maxLength: 200, nullable: true),
+                    AvatarId = table.Column<Guid>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,35 +269,41 @@ namespace SocialNetworkApi.Data.Migrations
                         column: x => x.AvatarId,
                         principalTable: "Images",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Profiles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AttachedImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Text = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    TimePublished = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    AuthorId = table.Column<Guid>(nullable: false),
+                    ProfileId = table.Column<Guid>(nullable: false),
+                    AttachedImageId = table.Column<Guid>(nullable: true),
+                    Text = table.Column<string>(maxLength: 2000, nullable: false),
+                    TimePublished = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_Images_AttachedImageId",
+                        column: x => x.AttachedImageId,
+                        principalTable: "Images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Posts_AspNetUsers_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Posts_Images_AttachedImageId",
-                        column: x => x.AttachedImageId,
-                        principalTable: "Images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Posts_Profiles_ProfileId",
                         column: x => x.ProfileId,
@@ -330,6 +352,11 @@ namespace SocialNetworkApi.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Images_OwnerId",
+                table: "Images",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_AuthorId",
                 table: "Messages",
                 column: "AuthorId");
@@ -363,6 +390,12 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "IX_Profiles_AvatarId",
                 table: "Profiles",
                 column: "AvatarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Profiles_UserId",
+                table: "Profiles",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserChat_UserId",
@@ -403,13 +436,13 @@ namespace SocialNetworkApi.Data.Migrations
                 name: "Profiles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Chats");
 
             migrationBuilder.DropTable(
                 name: "Images");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }
