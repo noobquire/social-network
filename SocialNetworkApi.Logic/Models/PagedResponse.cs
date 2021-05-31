@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Services.Models
 {
@@ -14,6 +17,20 @@ namespace SocialNetworkApi.Services.Models
             this.PageNumber = pageNumber;
             this.PageSize = pageSize;
             this.Data = data;
+        }
+
+        public static PagedResponse<T> CreatePagedResponse(IEnumerable<T> allData, PaginationFilter filter)
+        {
+            var allDataArray = allData.ToArray();
+            var pagedMessages =
+                allDataArray.Skip((filter.PageNumber - 1) * filter.PageSize)
+                    .Take(filter.PageSize);
+            var response = new PagedResponse<T>(pagedMessages, filter.PageNumber, filter.PageSize)
+            {
+                TotalPages = (int)Math.Ceiling((double)allDataArray.Count() / filter.PageSize),
+                TotalRecords = allDataArray.Count()
+            };
+            return response;
         }
     }
 }

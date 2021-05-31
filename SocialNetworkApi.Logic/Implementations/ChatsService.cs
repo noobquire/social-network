@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -138,14 +137,15 @@ namespace SocialNetworkApi.Services.Implementations
             return (await _unitOfWork.Chats.GetByIdAsync(chatId))?.ToDto();
         }
 
-        public async Task<IEnumerable<ChatDto>> GetUserChats()
+        public async Task<PagedResponse<ChatDto>> GetUserChats(PaginationFilter filter)
         {
             var principal = _contextAccessor.HttpContext.User;
             var currentUser = await _userManager.GetUserAsync(principal);
-            return (await _unitOfWork.Chats
+            var allChats = (await _unitOfWork.Chats
                     .QueryAsync(c => c.Participants
                         .Any(p => p.UserId == currentUser.Id)))
-                .Select(c => c.ToDto());
+                .Select(c => c.ToDto()).ToArray();
+            return PagedResponse<ChatDto>.CreatePagedResponse(allChats, filter);
         }
 
         public async Task<bool> LeaveChatAsync(string chatId)

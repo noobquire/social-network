@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
@@ -97,7 +98,7 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("/api/chats/{chatId}/messages")]
-        public async Task<IActionResult> GetGroupMessages([Required][ValidateGuid][FromRoute] string chatId)
+        public async Task<IActionResult> GetGroupMessages([Required][ValidateGuid][FromRoute] string chatId, [FromQuery] PaginationFilter filter)
         {
             var chat = await _chatsService.GetByIdAsync(chatId);
             var authResult = await _authorizationService.AuthorizeAsync(User, chat, "ChatParticipant");
@@ -109,7 +110,7 @@ namespace SocialNetworkApi.Controllers
 
             try
             {
-                var messages = await _messagesService.GetGroupMessagesAsync(chatId);
+                var messages = await _messagesService.GetGroupMessagesAsync(chatId, filter);
                 return Ok(messages);
             }
             catch (ItemNotFoundException)
@@ -119,11 +120,11 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("/api/users/{userId}/messages")]
-        public async Task<IActionResult> GetPersonalMessages([Required][ValidateGuid][FromRoute] string userId)
+        public async Task<IActionResult> GetPersonalMessages([Required][ValidateGuid][FromRoute] string userId, [FromQuery] PaginationFilter filter)
         {
             try
             {
-                var messages = await _messagesService.GetPersonalMessagesAsync(userId);
+                var messages = await _messagesService.GetPersonalMessagesAsync(userId, filter);
                 return Ok(messages);
             }
             catch (ItemNotFoundException e)
