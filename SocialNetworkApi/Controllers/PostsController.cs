@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
@@ -52,9 +53,9 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Route("api/profiles/{profileId}/posts")]
-        public async Task<IActionResult> GetPostsByProfile([FromRoute][ValidateGuid] string profileId)
+        public async Task<IActionResult> GetPostsByProfile([FromRoute][ValidateGuid] string profileId, [FromQuery] PaginationFilter filter)
         {
-            var posts = await _postsService.GetByProfileAsync(profileId);
+            var posts = await _postsService.GetByProfileAsync(profileId, filter);
 
             return Ok(posts);
         }

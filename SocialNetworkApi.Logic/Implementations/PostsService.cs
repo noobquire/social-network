@@ -31,12 +31,13 @@ namespace SocialNetworkApi.Services.Implementations
             return (await _unitOfWork.Posts.GetByIdAsync(postId))?.ToDto();
         }
 
-        public async Task<IEnumerable<PostDto>> GetByProfileAsync(string profileId)
+        public async Task<PagedResponse<PostDto>> GetByProfileAsync(string profileId, PaginationFilter filter)
         {
-            return (await _unitOfWork.Posts
+            var allPosts = (await _unitOfWork.Posts
                 .QueryAsync(p => 
                     p.ProfileId.ToString() == profileId))
                 .Select(p => p.ToDto());
+            return PagedResponse<PostDto>.CreatePagedResponse(allPosts, filter);
         }
 
         public async Task<PostDto> CreateAsync(string profileId, PostDataModel postData)

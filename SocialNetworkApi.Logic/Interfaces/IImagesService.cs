@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using SocialNetworkApi.Data.Models;
+using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 
 namespace SocialNetworkApi.Services.Interfaces
@@ -10,8 +11,8 @@ namespace SocialNetworkApi.Services.Interfaces
         Task<ImageHeaderDto> UploadAsync(IFormFile imageData);
         Task<ImageDto> GetByIdAsync(string imageId);
         Task<ImageHeaderDto> GetHeaderByIdAsync(string imageId);
-        Task<IEnumerable<ImageDto>> GetByUserAsync(string userId);
+        Task<PagedResponse<ImageDto>> GetByUserAsync(string userId, PaginationFilter filter);
         Task<bool> DeleteByIdAsync(string imageId);
-        Task<IEnumerable<ImageHeaderDto>> GetHeadersByUserAsync(string userId);
+        Task<PagedResponse<ImageHeaderDto>> GetHeadersByUserAsync(string userId, PaginationFilter filter);
     }
 }

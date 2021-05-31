@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Extensions;
@@ -24,12 +25,14 @@ namespace SocialNetworkApi.Services.Implementations
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IProfilesService _profilesService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UsersService(UserManager<User> userManager, IConfiguration configuration, IProfilesService profilesService)
+        public UsersService(UserManager<User> userManager, IConfiguration configuration, IProfilesService profilesService, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _configuration = configuration;
             _profilesService = profilesService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<UserDto> RegisterAsync(UserRegisterModel registerModel)
@@ -127,7 +130,7 @@ namespace SocialNetworkApi.Services.Implementations
             }
 
             user.IsDeleted = true;
-            
+
 
             await _userManager.UpdateAsync(user);
             await _userManager.SetLockoutEnabledAsync(user, true);
@@ -139,14 +142,14 @@ namespace SocialNetworkApi.Services.Implementations
             return true;
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllAsync(bool withDeleted = false)
+        public async Task<PagedResponse<UserDto>> GetAllAsync(PaginationFilter filter)
         {
-            var users = await _userManager.Users.ToListAsync();
-            if (!withDeleted)
-            {
-                users = users.Where(u => !u.IsDeleted).ToList();
-            }
-            return users.Select(user => user.ToDto());
+            var users = await _unitOfWork.Users.GetPaginatedAsync(filter);
+            var response = new PagedResponse<UserDto>(users.Select(u => u.ToDto()), filter.PageNumber, filter.PageSize);
+            var totalRecords = await _unitOfWork.Users.CountAsync();
+            response.TotalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize);
+            response.TotalRecords = totalRecords;
+            return response;
         }
 
         public async Task<bool> ReinstateAsync(string userId)

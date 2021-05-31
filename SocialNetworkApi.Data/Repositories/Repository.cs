@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Data.Interfaces;
+using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Data.Repositories
 {
@@ -27,6 +28,14 @@ namespace SocialNetworkApi.Data.Repositories
             return await Context
                 .Set<TEntity>()
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetPaginatedAsync(PaginationFilter filter)
+        {
+           return await Context.Set<TEntity>()
+               .Skip((filter.PageNumber - 1) * filter.PageSize)
+               .Take(filter.PageSize)
+               .ToListAsync();
         }
 
         public async Task<IEnumerable<TEntity>> QueryAsync(Func<TEntity, bool> predicate)
@@ -65,6 +74,11 @@ namespace SocialNetworkApi.Data.Repositories
             await Context.AddAsync(entity);
             await Context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await Context.Set<TEntity>().CountAsync();
         }
     }
 }

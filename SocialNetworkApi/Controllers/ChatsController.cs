@@ -3,6 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
@@ -71,9 +72,9 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUserChats()
+        public async Task<IActionResult> GetUserChats([FromQuery] PaginationFilter filter)
         {
-            var chats = await _chatsService.GetUserChats();
+            var chats = await _chatsService.GetUserChats(filter);
 
             return Ok(chats);
         }

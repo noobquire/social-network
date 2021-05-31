@@ -7,11 +7,13 @@ namespace SocialNetworkApi.Data.Interfaces
 {
     public interface IRepository<TEntity>
     {
-        public Task<TEntity> GetByIdAsync(string id);
-        public Task<IEnumerable<TEntity>> GetAllAsync();
-        public Task<IEnumerable<TEntity>> QueryAsync(Func<TEntity, bool> predicate);
-        public Task<bool> DeleteByIdAsync(string id);
-        public Task<bool> UpdateAsync(TEntity entity);
-        public Task<bool> CreateAsync(TEntity entity);
+        Task<TEntity> GetByIdAsync(string id);
+        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetPaginatedAsync(PaginationFilter filter);
+        Task<IEnumerable<TEntity>> QueryAsync(Func<TEntity, bool> predicate);
+        Task<bool> DeleteByIdAsync(string id);
+        Task<bool> UpdateAsync(TEntity entity);
+        Task<bool> CreateAsync(TEntity entity);
+        Task<int> CountAsync();
     }
 }
