@@ -35,6 +35,10 @@ namespace SocialNetworkApi
             {
                 services.AddProductionDataAccess(Configuration);
             }
+            else if (Environment.IsEnvironment("Test"))
+            {
+                services.AddTestDataAccess();
+            }
             else
             {
                 services.AddDevelopmentDataAccess(Configuration);
@@ -71,7 +75,7 @@ namespace SocialNetworkApi
             {
                 CreateDatabase(app);
             }
-            
+
             CreateAdminUser(app.ApplicationServices).Wait();
         }
 

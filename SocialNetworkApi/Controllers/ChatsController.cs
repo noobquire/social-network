@@ -35,6 +35,10 @@ namespace SocialNetworkApi.Controllers
             {
                 return BadRequest(new ApiError("Participant list contains duplicates", HttpStatusCode.BadRequest));
             }
+            catch (ItemNotFoundException)
+            {
+                return BadRequest(new ApiError("Participant list contains invalid user Id", HttpStatusCode.BadRequest));
+            }
         }
 
         [HttpGet("{chatId}")]

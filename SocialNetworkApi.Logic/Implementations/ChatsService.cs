@@ -11,6 +11,7 @@ using SocialNetworkApi.Services.Extensions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Services.Implementations
 {
@@ -51,7 +52,19 @@ namespace SocialNetworkApi.Services.Implementations
 
             foreach (var participantId in newChat.ParticipantIds)
             {
+                var validator = new ValidateGuidAttribute();
+                if(!validator.IsValid(participantId))
+                {
+                    throw new ItemNotFoundException("Specified Id is not a valid GUID");
+                }
+
                 var user = await _userManager.FindByIdAsync(participantId);
+
+                if (user == null)
+                {
+                    throw new ItemNotFoundException("User with specified Id was not found");
+                }
+
                 var chatParticipant = new UserChat()
                 {
                     ChatId = chat.Id,
@@ -66,13 +79,8 @@ namespace SocialNetworkApi.Services.Implementations
             {
                 await _unitOfWork.SaveChangesAsync();
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException ex) when (ex.Message.Contains("already being tracked"))
             {
-                if (!ex.Message.Contains("already being tracked"))
-                {
-                    throw;
-                }
-
                 throw new DuplicateChatParticipantException("Participant is already in this chat");
             }
 
