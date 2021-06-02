@@ -33,6 +33,7 @@ namespace SocialNetworkApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddRouting(options => options.LowercaseUrls = true);
             if (Environment.IsProduction())
             {
                 services.AddProductionDataAccess(Configuration);
@@ -59,6 +60,7 @@ namespace SocialNetworkApi
                 app.UseDeveloperExceptionPage();
             }
 
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
