@@ -25,10 +25,13 @@ namespace SocialNetworkApi.Services.Models
             var pagedMessages =
                 allDataArray.Skip((filter.PageNumber - 1) * filter.PageSize)
                     .Take(filter.PageSize);
-            var response = new PagedResponse<T>(pagedMessages, filter.PageNumber, filter.PageSize)
+            var totalPages = (int) Math.Ceiling((double) allDataArray.Length / filter.PageSize);
+
+            var pageNumber = filter.PageNumber > totalPages ? totalPages : filter.PageNumber;
+            var response = new PagedResponse<T>(pagedMessages, pageNumber, filter.PageSize)
             {
-                TotalPages = (int)Math.Ceiling((double)allDataArray.Count() / filter.PageSize),
-                TotalRecords = allDataArray.Count()
+                TotalPages = totalPages,
+                TotalRecords = allDataArray.Length
             };
             return response;
         }
