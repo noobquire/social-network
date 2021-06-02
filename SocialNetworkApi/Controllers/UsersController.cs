@@ -42,7 +42,7 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
         public async Task<IActionResult> Register([FromBody] UserRegisterModel registerModel)
         {
