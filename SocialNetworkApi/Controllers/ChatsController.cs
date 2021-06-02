@@ -3,16 +3,19 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ChatsController : ControllerBase
     {
         private readonly IChatsService _chatsService;
@@ -23,13 +26,14 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChatDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
         public async Task<IActionResult> CreateGroupChat([FromBody][Required] NewChatModel newChat)
         {
             try
             {
                 var chat = await _chatsService.CreateGroupAsync(newChat);
-                return CreatedAtAction(nameof(GetChatById), new {chatId = chat.Id}, chat);
+                return CreatedAtAction(nameof(GetChatById), new { chatId = chat.Id }, chat);
             }
             catch (DuplicateChatParticipantException)
             {
@@ -42,7 +46,9 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("{chatId}")]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChatDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetChatById([FromRoute][ValidateGuid] string chatId)
         {
             var chat = await _chatsService.GetByIdAsync(chatId);
@@ -56,7 +62,9 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpDelete("{chatId}")]
-        [Authorize]
+        [HttpGet("{chatId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> LeaveChat([FromRoute][ValidateGuid] string chatId)
         {
             var result = await _chatsService.LeaveChatAsync(chatId);
@@ -70,7 +78,6 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetUserChats()
         {
             var chats = await _chatsService.GetUserChats();
