@@ -5,8 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using SocialNetworkApi.Data;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Middleware;
@@ -46,6 +48,7 @@ namespace SocialNetworkApi
             services.AddServices();
             services.AddAuthorizationHandlers();
             services.AddIdentityConfiguration(Configuration);
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +59,15 @@ namespace SocialNetworkApi
                 app.UseDeveloperExceptionPage();
             }
 
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Social Network API v1");
+            });
 
             app.UseHttpsRedirection();
 
