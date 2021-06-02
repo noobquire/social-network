@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Controllers
@@ -29,6 +31,9 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpPost("/api/chats/{chatId}/messages")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MessageDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> SendGroupMessage([Required][ValidateGuid][FromRoute] string chatId,
             [Required][FromBody] MessageDataModel messageData)
         {
@@ -45,17 +50,20 @@ namespace SocialNetworkApi.Controllers
                 var message = await _messagesService.SendGroupMessageAsync(chatId, messageData);
                 return CreatedAtAction(nameof(GetMessageById), new { messageId = message.Id, chatId }, message);
             }
-            catch (ItemNotFoundException)
+            catch (ItemNotFoundException e)
             {
-                return BadRequest(new ApiError("Chat not found", HttpStatusCode.BadRequest));
+                return BadRequest(new ApiError(e.Message, HttpStatusCode.BadRequest));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e) 
             {
-                return BadRequest(new ApiError("Chat is not a group", HttpStatusCode.BadRequest));
+                return BadRequest(new ApiError(e.Message, HttpStatusCode.BadRequest));
             }
         }
 
         [HttpPost("/api/users/{userId}/messages")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MessageDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> SendPersonalMessage([Required][ValidateGuid][FromRoute] string userId,
             [Required][FromBody] MessageDataModel messageData)
         {
@@ -77,6 +85,9 @@ namespace SocialNetworkApi.Controllers
         [HttpGet]
         [Route("/api/chats/{chatId}/messages/{messageId}")]
         [Route("/api/users/{userId}/messages/{messageId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MessageDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetMessageById([Required][ValidateGuid][FromRoute] string messageId)
         {
             var message = await _messagesService.GetMessageByIdAsync(messageId);
@@ -98,6 +109,8 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("/api/chats/{chatId}/messages")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<MessageDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetGroupMessages([Required][ValidateGuid][FromRoute] string chatId, [FromQuery] PaginationFilter filter)
         {
             var chat = await _chatsService.GetByIdAsync(chatId);
@@ -120,6 +133,8 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("/api/users/{userId}/messages")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<MessageDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetPersonalMessages([Required][ValidateGuid][FromRoute] string userId, [FromQuery] PaginationFilter filter)
         {
             try
@@ -136,6 +151,9 @@ namespace SocialNetworkApi.Controllers
         [HttpDelete]
         [Route("/api/chats/{chatId}/messages/{messageId}")]
         [Route("/api/users/{userId}/messages/{messageId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<MessageDto>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> DeleteMessage([Required][ValidateGuid][FromRoute] string messageId)
         {
             var message = await _messagesService.GetMessageByIdAsync(messageId);
@@ -159,7 +177,7 @@ namespace SocialNetworkApi.Controllers
             if (!authResult.Succeeded)
             {
                 var authError = new ApiError("You are not message author or chat admin", HttpStatusCode.Unauthorized);
-                return Unauthorized(authError);
+                return StatusCode(StatusCodes.Status403Forbidden, authError);
             }
 
             await _messagesService.DeleteMessageAsync(messageId);
@@ -170,6 +188,10 @@ namespace SocialNetworkApi.Controllers
         [HttpPut]
         [Route("/api/chats/{chatId}/messages/{messageId}")]
         [Route("/api/users/{userId}/messages/{messageId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<MessageDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> EditMessage([Required][ValidateGuid][FromRoute] string messageId,
             [Required][FromBody] MessageDataModel messageData)
         {
@@ -194,7 +216,7 @@ namespace SocialNetworkApi.Controllers
             if (!authResult.Succeeded)
             {
                 var authError = new ApiError("You are not message author", HttpStatusCode.Unauthorized);
-                return Unauthorized(authError);
+                return StatusCode(StatusCodes.Status403Forbidden, authError);
             }
 
             try

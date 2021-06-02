@@ -7,6 +7,7 @@ using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Extensions;
 using SocialNetworkApi.Services.Interfaces;
+using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 
 namespace SocialNetworkApi.Services.Implementations
@@ -63,10 +64,16 @@ namespace SocialNetworkApi.Services.Implementations
             return profile?.ToDto();
         }
 
-        public async Task<IEnumerable<ProfileDto>> GetAllAsync()
+        public async Task<PagedResponse<ProfileDto>> GetAllAsync(PaginationFilter filter)
         {
-            return (await _unitOfWork.Profiles.GetAllAsync())
-                .Select(p => p.ToDto());
+            var pagedProfiles = await _unitOfWork.Profiles.GetPaginatedAsync(filter);
+            var totalRecords = await _unitOfWork.Profiles.CountAsync();
+            var response = new PagedResponse<ProfileDto>(pagedProfiles.Select(p => p.ToDto()), filter.PageNumber, filter.PageSize)
+            {
+                TotalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize),
+                TotalRecords = totalRecords
+            };
+            return response;
         }
 
         public async Task<bool> DeleteByIdAsync(string profileId)

@@ -2,8 +2,11 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
+using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
 
@@ -11,6 +14,7 @@ namespace SocialNetworkApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProfilesController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
@@ -22,7 +26,9 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("{profileId}")]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProfileDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetById([FromRoute][ValidateGuid] string profileId)
         {
             var profile = await _profilesService.GetByIdAsync(profileId);
@@ -36,7 +42,10 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProfileDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> UpdateProfile([FromBody][ValidateGuid] ProfileDto profile)
         {
             var storedProfile = await _profilesService.GetByIdAsync(profile.Id);
@@ -45,7 +54,7 @@ namespace SocialNetworkApi.Controllers
             if (!authResult.Succeeded)
             {
                 var authError = new ApiError("You are not permitted to update this profile.", HttpStatusCode.BadRequest);
-                return Unauthorized(authError);
+                return StatusCode(StatusCodes.Status403Forbidden, authError);
             }
 
             var result = await _profilesService.UpdateAsync(profile);
@@ -59,10 +68,10 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetAll()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<ProfileDto>))]
+        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter filter)
         {
-            return Ok(await _profilesService.GetAllAsync());
+            return Ok(await _profilesService.GetAllAsync(filter));
         }
     }
 }

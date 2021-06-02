@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
+using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
+using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Controllers
@@ -26,6 +29,8 @@ namespace SocialNetworkApi.Controllers
 
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageHeaderDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadImage(
             [AllowedExtensions, MaxFileSize((int)10E6), Required] IFormFile image)
         {
@@ -34,7 +39,8 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("{imageId}")]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetImageById([FromRoute][ValidateGuid] string imageId)
         {
             var image = await _imagesService.GetByIdAsync(imageId);
@@ -48,7 +54,8 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpGet("{imageId}/header")]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageHeaderDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetImageHeaderById([FromRoute][ValidateGuid] string imageId)
         {
             var imageHeader = await _imagesService.GetHeaderByIdAsync(imageId);
@@ -63,6 +70,9 @@ namespace SocialNetworkApi.Controllers
 
         [HttpDelete("{imageId}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> DeleteImageById([FromRoute][ValidateGuid] string imageId)
         {
             var image = await _imagesService.GetByIdAsync(imageId);
@@ -76,7 +86,7 @@ namespace SocialNetworkApi.Controllers
             if (!authResult.Succeeded)
             {
                 var authError = new ApiError("You are not permitted to delete this image.", HttpStatusCode.Unauthorized);
-                return Unauthorized(authError);
+                return StatusCode(StatusCodes.Status403Forbidden, authError);
             }
 
             var result = await _imagesService.DeleteByIdAsync(imageId);
@@ -93,17 +103,39 @@ namespace SocialNetworkApi.Controllers
         [HttpGet]
         [Route("/api/users/{userId}/images")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<ImageDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetUserImages([FromRoute][ValidateGuid] string userId, [FromQuery] PaginationFilter filter)
         {
-            return Ok(await _imagesService.GetByUserAsync(userId, filter));
+            try
+            {
+                var images = await _imagesService.GetByUserAsync(userId, filter);
+                return Ok(images);
+            }
+            catch (ItemNotFoundException)
+            {
+                var notFoundError = new ApiError("User with such Id was not found.", HttpStatusCode.NotFound);
+                return NotFound(notFoundError);
+            }
         }
 
         [HttpGet]
         [Route("/api/users/{userId}/images/headers")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<ImageHeaderDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetUserImageHeaders([FromRoute][ValidateGuid] string userId, [FromQuery] PaginationFilter filter)
         {
-            return Ok(await _imagesService.GetHeadersByUserAsync(userId, filter));
+            try
+            {
+                var headers = await _imagesService.GetHeadersByUserAsync(userId, filter);
+                return Ok(headers);
+            }
+            catch (ItemNotFoundException)
+            {
+                var notFoundError = new ApiError("User with such Id was not found.", HttpStatusCode.NotFound);
+                return NotFound(notFoundError);
+            }
         }
     }
 }
