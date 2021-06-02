@@ -63,7 +63,6 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpDelete("{chatId}")]
-        [HttpGet("{chatId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> LeaveChat([FromRoute][ValidateGuid] string chatId)

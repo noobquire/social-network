@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
+using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Extensions;
@@ -76,11 +77,22 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<PagedResponse<ImageDto>> GetByUserAsync(string userId, PaginationFilter filter)
         {
+            await CheckIfUserExists(userId);
+
             var allImages = (await _unitOfWork.Images
                     .QueryAsync(i =>
                     i.OwnerId.ToString() == userId))
                 .Select(i => i.ToDto()).ToArray();
             return PagedResponse<ImageDto>.CreatePagedResponse(allImages, filter);
+        }
+
+        private async Task CheckIfUserExists(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ItemNotFoundException("User with specified Id was not found");
+            }
         }
 
         public async Task<bool> DeleteByIdAsync(string imageId)
@@ -90,6 +102,8 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<PagedResponse<ImageHeaderDto>> GetHeadersByUserAsync(string userId, PaginationFilter filter)
         {
+            await CheckIfUserExists(userId);
+
             var allHeaders = (await _unitOfWork.Images
                     .QueryAsync(i =>
                         i.OwnerId.ToString() == userId))

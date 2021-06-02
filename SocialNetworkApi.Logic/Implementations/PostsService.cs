@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
+using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Extensions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
@@ -33,6 +33,8 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<PagedResponse<PostDto>> GetByProfileAsync(string profileId, PaginationFilter filter)
         {
+            await CheckIfProfileExists(profileId);
+
             var allPosts = (await _unitOfWork.Posts
                 .QueryAsync(p => 
                     p.ProfileId.ToString() == profileId))
@@ -40,8 +42,19 @@ namespace SocialNetworkApi.Services.Implementations
             return PagedResponse<PostDto>.CreatePagedResponse(allPosts, filter);
         }
 
+        private async Task CheckIfProfileExists(string profileId)
+        {
+            var profile = await _unitOfWork.Profiles.GetByIdAsync(profileId);
+            if (profile == null)
+            {
+                throw new ItemNotFoundException("Profile with such Id was not found");
+            }
+        }
+
         public async Task<PostDto> CreateAsync(string profileId, PostDataModel postData)
         {
+            await CheckIfProfileExists(profileId);
+
             var post = new Post()
             {
                 ProfileId = new Guid(profileId),

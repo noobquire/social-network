@@ -2,11 +2,13 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
 
 namespace SocialNetworkApi.Controllers
@@ -24,8 +26,9 @@ namespace SocialNetworkApi.Controllers
             _authorizationService = authorizationService;
         }
 
-        // /api/users/login
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JwtToken))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ApiError))]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
             var token = await _usersService.LoginAsync(login);
@@ -39,6 +42,8 @@ namespace SocialNetworkApi.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
         public async Task<IActionResult> Register([FromBody] UserRegisterModel registerModel)
         {
             try
@@ -53,32 +58,39 @@ namespace SocialNetworkApi.Controllers
             }
         }
 
-        // DELETE /api/users/user-id?
         [HttpDelete("{userId}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> DeleteById([FromRoute][ValidateGuid] string userId)
         {
             var user = await _usersService.GetByIdAsync(userId);
+
+            if(user == null)
+            {
+                var error = new ApiError("User with such Id was not found.", HttpStatusCode.NotFound);
+                return NotFound(error);
+            }
+
             var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameOrAdminUser");
 
             if(!authResult.Succeeded)
             {
                 var authError = new ApiError("You are not permitted to delete this user.", HttpStatusCode.BadRequest);
-                return Unauthorized(authError);
+                return StatusCode(StatusCodes.Status403Forbidden, authError);
             }
 
-            var result = await _usersService.DeleteByIdAsync(userId);
-            if (result)
-            {
-                return Ok();
-            }
-
-            var error = new ApiError("User with such Id was not found.", HttpStatusCode.NotFound);
-            return NotFound(error);
+            await _usersService.DeleteByIdAsync(userId);
+            return Ok();
         }
 
         [HttpGet("{userId}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ApiError))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> GetById([FromRoute][ValidateGuid] string userId)
         {
             var user = await _usersService.GetByIdAsync(userId);
@@ -93,6 +105,8 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<UserDto>))]
         public async Task<IActionResult> GetAll([FromQuery] PaginationFilter filter)
         {
             var users = await _usersService.GetAllAsync(filter);
@@ -102,6 +116,8 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet("{userId}/reinstate")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedResponse<UserDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ApiError))]
         public async Task<IActionResult> Reinstate([FromRoute][ValidateGuid] string userId)
         {
             var result = await _usersService.ReinstateAsync(userId);
