@@ -153,9 +153,9 @@ namespace SocialNetworkApi.IntegrationTests
             response.EnsureSuccessStatusCode();
 
             var resultString = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<IEnumerable<UserDto>>(resultString);
+            var result = JsonConvert.DeserializeObject<PagedResponse<UserDto>>(resultString);
 
-            result.Should().NotBeEmpty();
+            result.Data.Should().NotBeEmpty();
         }
 
         [Test]

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Validation;
@@ -92,17 +93,17 @@ namespace SocialNetworkApi.Controllers
         [HttpGet]
         [Route("/api/users/{userId}/images")]
         [Authorize]
-        public async Task<IActionResult> GetUserImages([FromRoute][ValidateGuid] string userId)
+        public async Task<IActionResult> GetUserImages([FromRoute][ValidateGuid] string userId, [FromQuery] PaginationFilter filter)
         {
-            return Ok(await _imagesService.GetByUserAsync(userId));
+            return Ok(await _imagesService.GetByUserAsync(userId, filter));
         }
 
         [HttpGet]
         [Route("/api/users/{userId}/images/headers")]
         [Authorize]
-        public async Task<IActionResult> GetUserImageHeaders([FromRoute][ValidateGuid] string userId)
+        public async Task<IActionResult> GetUserImageHeaders([FromRoute][ValidateGuid] string userId, [FromQuery] PaginationFilter filter)
         {
-            return Ok(await _imagesService.GetHeadersByUserAsync(userId));
+            return Ok(await _imagesService.GetHeadersByUserAsync(userId, filter));
         }
     }
 }

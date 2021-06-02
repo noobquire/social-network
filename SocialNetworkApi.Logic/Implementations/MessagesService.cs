@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -147,7 +146,7 @@ namespace SocialNetworkApi.Services.Implementations
             return message.ToDto();
         }
 
-        public async Task<IEnumerable<MessageDto>> GetGroupMessagesAsync(string chatId)
+        public async Task<PagedResponse<MessageDto>> GetGroupMessagesAsync(string chatId, PaginationFilter filter)
         {
             var chat = await _unitOfWork.Chats.GetByIdAsync(chatId);
             if (chat == null)
@@ -155,16 +154,19 @@ namespace SocialNetworkApi.Services.Implementations
                 throw new ItemNotFoundException("Chat not found");
             }
 
-            return (await _unitOfWork.Messages
+            var allMessages = (await _unitOfWork.Messages
                     .QueryAsync(m =>
                         m.ChatId.ToString() == chatId))
-                .Select(m => m.ToDto());
+                .Select(m => m.ToDto())
+                .OrderByDescending(m => m.TimePublished)
+                .ToArray();
+            return PagedResponse<MessageDto>.CreatePagedResponse(allMessages, filter);
         }
 
-        public async Task<IEnumerable<MessageDto>> GetPersonalMessagesAsync(string userId)
+        public async Task<PagedResponse<MessageDto>> GetPersonalMessagesAsync(string userId, PaginationFilter filter)
         {
             var chatWithUser = await GetChatWithUser(userId);
-            return await GetGroupMessagesAsync(chatWithUser.Id);
+            return await GetGroupMessagesAsync(chatWithUser.Id, filter);
         }
 
         public async Task<MessageDto> GetMessageByIdAsync(string messageId)

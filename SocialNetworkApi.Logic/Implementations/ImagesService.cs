@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +10,7 @@ using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Extensions;
+using SocialNetworkApi.Services.Models;
 
 namespace SocialNetworkApi.Services.Implementations
 {
@@ -74,12 +74,13 @@ namespace SocialNetworkApi.Services.Implementations
             return (await _unitOfWork.Images.GetByIdAsync(imageId))?.ToHeaderDto();
         }
 
-        public async Task<IEnumerable<ImageDto>> GetByUserAsync(string userId)
+        public async Task<PagedResponse<ImageDto>> GetByUserAsync(string userId, PaginationFilter filter)
         {
-            return (await _unitOfWork.Images
+            var allImages = (await _unitOfWork.Images
                     .QueryAsync(i =>
                     i.OwnerId.ToString() == userId))
-                .Select(i => i.ToDto());
+                .Select(i => i.ToDto()).ToArray();
+            return PagedResponse<ImageDto>.CreatePagedResponse(allImages, filter);
         }
 
         public async Task<bool> DeleteByIdAsync(string imageId)
@@ -87,12 +88,13 @@ namespace SocialNetworkApi.Services.Implementations
             return await _unitOfWork.Images.DeleteByIdAsync(imageId);
         }
 
-        public async Task<IEnumerable<ImageHeaderDto>> GetHeadersByUserAsync(string userId)
+        public async Task<PagedResponse<ImageHeaderDto>> GetHeadersByUserAsync(string userId, PaginationFilter filter)
         {
-            return (await _unitOfWork.Images
+            var allHeaders = (await _unitOfWork.Images
                     .QueryAsync(i =>
                         i.OwnerId.ToString() == userId))
-                .Select(i => i.ToHeaderDto());
+                .Select(i => i.ToHeaderDto()).ToArray();
+            return PagedResponse<ImageHeaderDto>.CreatePagedResponse(allHeaders, filter);
         }
     }
 }

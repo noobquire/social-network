@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 
@@ -11,8 +11,8 @@ namespace SocialNetworkApi.Services.Interfaces
         Task<MessageDto> SendPersonalMessageAsync(string userId, MessageDataModel messageData);
         Task<bool> DeleteMessageAsync(string messageId);
         Task<MessageDto> EditMessageAsync(string messageId, MessageDataModel messageData);
-        Task<IEnumerable<MessageDto>> GetGroupMessagesAsync(string chatId);
-        Task<IEnumerable<MessageDto>> GetPersonalMessagesAsync(string userId);
+        Task<PagedResponse<MessageDto>> GetGroupMessagesAsync(string chatId, PaginationFilter filter);
+        Task<PagedResponse<MessageDto>> GetPersonalMessagesAsync(string userId, PaginationFilter filter);
         Task<MessageDto> GetMessageByIdAsync(string messageId);
     }
 }

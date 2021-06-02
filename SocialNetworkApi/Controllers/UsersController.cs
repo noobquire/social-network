@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Interfaces;
@@ -92,9 +93,9 @@ namespace SocialNetworkApi.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery] bool withDeleted = false)
+        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter filter)
         {
-            var users = await _usersService.GetAllAsync(withDeleted);
+            var users = await _usersService.GetAllAsync(filter);
 
             return Ok(users);
         }

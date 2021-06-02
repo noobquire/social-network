@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
@@ -14,7 +12,7 @@ namespace SocialNetworkApi.Services.Interfaces
         Task<UserDto> GetByIdAsync(string id);
         Task<UserDto> GetByEmailAsync(string email);
         Task<bool> DeleteByIdAsync(string id);
-        Task<IEnumerable<UserDto>> GetAllAsync(bool withDeleted = false);
+        Task<PagedResponse<UserDto>> GetAllAsync(PaginationFilter filter);
         Task<bool> ReinstateAsync(string userId);
     }
 }
