@@ -1,4 +1,13 @@
-﻿using SocialNetworkApi.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using SocialNetworkApi.Data.Interfaces;
+using SocialNetworkApi.Data.Models;
+using SocialNetworkApi.Services.Exceptions;
+using SocialNetworkApi.Services.Extensions;
+using SocialNetworkApi.Services.Interfaces;
+using SocialNetworkApi.Services.Models;
+using SocialNetworkApi.Services.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,16 +15,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using SocialNetworkApi.Data.Interfaces;
-using SocialNetworkApi.Data.Models;
-using SocialNetworkApi.Services.Exceptions;
-using SocialNetworkApi.Services.Extensions;
-using SocialNetworkApi.Services.Models;
-using SocialNetworkApi.Services.Models.Dtos;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace SocialNetworkApi.Services.Implementations
@@ -134,7 +133,7 @@ namespace SocialNetworkApi.Services.Implementations
 
             await _userManager.UpdateAsync(user);
             await _userManager.SetLockoutEnabledAsync(user, true);
-            if(user.Profile != null)
+            if (user.Profile != null)
             {
                 await _profilesService.DeleteByIdAsync(user.Profile.Id.ToString());
             }
@@ -145,10 +144,14 @@ namespace SocialNetworkApi.Services.Implementations
         public async Task<PagedResponse<UserDto>> GetAllAsync(PaginationFilter filter)
         {
             var users = await _unitOfWork.Users.GetPaginatedAsync(filter);
-            var response = new PagedResponse<UserDto>(users.Select(u => u.ToDto()), filter.PageNumber, filter.PageSize);
             var totalRecords = await _unitOfWork.Users.CountAsync();
-            response.TotalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize);
-            response.TotalRecords = totalRecords;
+            var totalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize);
+            var pageNumber = filter.PageNumber > totalPages ? totalPages : filter.PageNumber;
+            var response = new PagedResponse<UserDto>(users.Select(u => u.ToDto()), pageNumber, filter.PageSize)
+            {
+                TotalPages = totalPages,
+                TotalRecords = totalRecords
+            };
             return response;
         }
 
@@ -162,7 +165,7 @@ namespace SocialNetworkApi.Services.Implementations
             user.IsDeleted = false;
             await _userManager.UpdateAsync(user);
             await _userManager.SetLockoutEnabledAsync(user, false);
-            if(user.Profile != null)
+            if (user.Profile != null)
             {
                 await _profilesService.ReinstateAsync(user.Profile.Id.ToString());
             }

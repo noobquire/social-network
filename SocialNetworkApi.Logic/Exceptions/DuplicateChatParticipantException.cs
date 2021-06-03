@@ -8,12 +8,12 @@ namespace SocialNetworkApi.Services.Exceptions
     {
         public DuplicateChatParticipantException()
         {
-            
+
         }
 
         public DuplicateChatParticipantException(string message) : base(message)
         {
-            
+
         }
 
         protected DuplicateChatParticipantException(SerializationInfo info, StreamingContext context) : base(info, context)

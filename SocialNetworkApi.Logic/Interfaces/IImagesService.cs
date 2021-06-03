@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Services.Interfaces
 {

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SocialNetworkApi.Services.Validation;
+﻿using SocialNetworkApi.Services.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace SocialNetworkApi.Services.Models
 {

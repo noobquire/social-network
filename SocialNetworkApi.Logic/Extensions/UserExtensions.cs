@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using SocialNetworkApi.Data.Models;
+﻿using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SocialNetworkApi.Services.Extensions
 {

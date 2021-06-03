@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Data.Models;
@@ -11,6 +8,9 @@ using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Controllers
 {
@@ -40,7 +40,7 @@ namespace SocialNetworkApi.Controllers
             try
             {
                 var post = await _postsService.CreateAsync(profileId, data);
-                return CreatedAtAction(nameof(GetPostById), "Posts", new {profileId, postId = post.Id}, post);
+                return CreatedAtAction(nameof(GetPostById), "Posts", new { profileId, postId = post.Id }, post);
             }
             catch (ItemNotFoundException)
             {

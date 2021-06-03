@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
@@ -11,6 +8,9 @@ using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Controllers
 {
@@ -76,7 +76,7 @@ namespace SocialNetworkApi.Controllers
         public async Task<IActionResult> DeleteImageById([FromRoute][ValidateGuid] string imageId)
         {
             var image = await _imagesService.GetByIdAsync(imageId);
-            if(image == null)
+            if (image == null)
             {
                 var notFoundError = new ApiError("Image with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(notFoundError);

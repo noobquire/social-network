@@ -1,10 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
@@ -12,6 +8,10 @@ using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Controllers
 {
@@ -54,7 +54,7 @@ namespace SocialNetworkApi.Controllers
             {
                 return BadRequest(new ApiError(e.Message, HttpStatusCode.BadRequest));
             }
-            catch (InvalidOperationException e) 
+            catch (InvalidOperationException e)
             {
                 return BadRequest(new ApiError(e.Message, HttpStatusCode.BadRequest));
             }

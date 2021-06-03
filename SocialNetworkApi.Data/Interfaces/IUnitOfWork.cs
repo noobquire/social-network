@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using SocialNetworkApi.Data.Models;
+﻿using SocialNetworkApi.Data.Models;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Data.Interfaces
 {

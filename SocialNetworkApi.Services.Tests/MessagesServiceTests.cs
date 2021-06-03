@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using NUnit.Framework;
-using SocialNetworkApi.Services.Interfaces;
 using Moq;
+using NUnit.Framework;
 using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Exceptions;
-using SocialNetworkApi.Services.Implementations;
-using SocialNetworkApi.Services.Models;
-using AutoFixture;
 using SocialNetworkApi.Services.Extensions;
+using SocialNetworkApi.Services.Implementations;
+using SocialNetworkApi.Services.Interfaces;
+using SocialNetworkApi.Services.Models;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Services.Tests
 {

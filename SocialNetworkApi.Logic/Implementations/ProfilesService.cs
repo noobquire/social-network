@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SocialNetworkApi.Data.Interfaces;
+﻿using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Exceptions;
 using SocialNetworkApi.Services.Extensions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Services.Implementations
 {
@@ -40,7 +39,7 @@ namespace SocialNetworkApi.Services.Implementations
         public async Task<bool> UpdateAsync(ProfileDto profile)
         {
             var storedProfile = await _unitOfWork.Profiles.GetByIdAsync(profile.Id);
-            if(storedProfile == null)
+            if (storedProfile == null)
             {
                 return false;
             }
@@ -68,9 +67,11 @@ namespace SocialNetworkApi.Services.Implementations
         {
             var pagedProfiles = await _unitOfWork.Profiles.GetPaginatedAsync(filter);
             var totalRecords = await _unitOfWork.Profiles.CountAsync();
-            var response = new PagedResponse<ProfileDto>(pagedProfiles.Select(p => p.ToDto()), filter.PageNumber, filter.PageSize)
+            var totalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize);
+            var pageNumber = filter.PageNumber > totalPages ? totalPages : filter.PageNumber;
+            var response = new PagedResponse<ProfileDto>(pagedProfiles.Select(p => p.ToDto()), pageNumber, filter.PageSize)
             {
-                TotalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize),
+                TotalPages = totalPages,
                 TotalRecords = totalRecords
             };
             return response;

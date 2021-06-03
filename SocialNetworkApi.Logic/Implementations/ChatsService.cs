@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
@@ -11,6 +8,9 @@ using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Services.Implementations
 {
@@ -52,7 +52,7 @@ namespace SocialNetworkApi.Services.Implementations
             foreach (var participantId in newChat.ParticipantIds)
             {
                 var validator = new ValidateGuidAttribute();
-                if(!validator.IsValid(participantId))
+                if (!validator.IsValid(participantId))
                 {
                     throw new ItemNotFoundException("Specified Id is not a valid GUID");
                 }
@@ -92,11 +92,11 @@ namespace SocialNetworkApi.Services.Implementations
             var principal = _contextAccessor.HttpContext.User;
             var ownerUser = await _userManager.GetUserAsync(principal);
             var existingChat = (await _unitOfWork.Chats
-                .QueryAsync(c => c.Type == ChatType.Personal && 
-                                 c.Participants.Any(uc => uc.UserId.ToString() == userId) 
+                .QueryAsync(c => c.Type == ChatType.Personal &&
+                                 c.Participants.Any(uc => uc.UserId.ToString() == userId)
                                  && c.Participants.Any(uc => uc.UserId == ownerUser.Id)))
                 .FirstOrDefault();
-            if(existingChat != null)
+            if (existingChat != null)
             {
                 throw new ItemAlreadyExistsException("Personal chat with this user already exists");
             }
@@ -108,7 +108,7 @@ namespace SocialNetworkApi.Services.Implementations
             };
 
             await _unitOfWork.Chats.CreateAsync(chat);
-            
+
 
             var firstParticipant = new UserChat
             {

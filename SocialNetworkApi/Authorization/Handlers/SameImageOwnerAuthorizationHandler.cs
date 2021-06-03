@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SocialNetworkApi.Authorization.Requirements;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Authorization.Handlers
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,6 +9,10 @@ using NUnit.Framework;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.IntegrationTests
 {
@@ -182,7 +182,7 @@ namespace SocialNetworkApi.IntegrationTests
                 var user = await userService.RegisterAsync(registerUser);
                 userId = user.Id;
             }
-            
+
             // Act
             var response = await _client.DeleteAsync($"/api/users/{userId}");
 
@@ -216,7 +216,7 @@ namespace SocialNetworkApi.IntegrationTests
                 userId = user.Id;
                 await userService.DeleteByIdAsync(user.Id);
             }
-            
+
             // Act
             var response = await _client.GetAsync($"/api/users/{userId}/reinstate");
 

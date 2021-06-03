@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using SocialNetworkApi.Authorization.Requirements;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Authorization.Handlers
 {

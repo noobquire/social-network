@@ -1,8 +1,8 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using SocialNetworkApi.Data.Models;
+﻿using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SocialNetworkApi.Services.Extensions
 {
@@ -26,6 +26,6 @@ namespace SocialNetworkApi.Services.Extensions
             post.AttachedImageId = data.AttachedImageId == null ? post.AttachedImageId : new Guid(data.AttachedImageId);
             post.Text = data.Text ?? post.Text;
             return post;
-        } 
+        }
     }
 }

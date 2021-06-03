@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using SocialNetworkApi.Data.Interfaces;
+﻿using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Data.Repositories
 {

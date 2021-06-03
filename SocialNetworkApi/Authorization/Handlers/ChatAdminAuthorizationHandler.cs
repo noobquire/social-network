@@ -1,17 +1,17 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using SocialNetworkApi.Authorization.Requirements;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models.Dtos;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Authorization.Handlers
 {
     public class ChatAdminAuthorizationHandler : AuthorizationHandler<SameUserRequirement, ChatDto>
     {
         private readonly UserManager<User> _userManager;
-        private readonly IChatsService _chatsService; 
+        private readonly IChatsService _chatsService;
 
         public ChatAdminAuthorizationHandler(UserManager<User> userManager, IChatsService chatsService)
         {

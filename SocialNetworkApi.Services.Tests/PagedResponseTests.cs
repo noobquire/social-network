@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models;
+using System.Linq;
 
 namespace SocialNetworkApi.Services.Tests
 {
@@ -33,7 +30,7 @@ namespace SocialNetworkApi.Services.Tests
             var filter = new PaginationFilter(11, 1);
 
             var result = PagedResponse<int>
-                .CreatePagedResponse(Enumerable.Range(1,10), filter);
+                .CreatePagedResponse(Enumerable.Range(1, 10), filter);
 
             result.PageNumber.Should().Be(10);
             result.TotalPages.Should().Be(10);

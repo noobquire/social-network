@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SocialNetworkApi.Services.Models
+﻿namespace SocialNetworkApi.Services.Models
 {
     public static class UserRoles
     {

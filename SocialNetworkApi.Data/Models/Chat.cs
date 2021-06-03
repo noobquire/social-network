@@ -1,8 +1,7 @@
-﻿using System;
+﻿using SocialNetworkApi.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using SocialNetworkApi.Data.Interfaces;
 
 namespace SocialNetworkApi.Data.Models
 {

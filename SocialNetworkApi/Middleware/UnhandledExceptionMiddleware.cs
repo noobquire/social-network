@@ -1,9 +1,9 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SocialNetworkApi.Models;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Middleware
 {

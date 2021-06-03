@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +8,8 @@ using SocialNetworkApi.Authorization.Handlers;
 using SocialNetworkApi.Authorization.Requirements;
 using SocialNetworkApi.Data;
 using SocialNetworkApi.Data.Models;
+using System;
+using System.Text;
 
 namespace SocialNetworkApi.Extensions
 {
@@ -37,14 +37,14 @@ namespace SocialNetworkApi.Extensions
 
             // Adding Authentication 
             services.AddAuthenticationConfiguration(configuration);
-            
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireNonAlphanumeric = false;
             });
             services.AddPolicies();
-            
+
             return services;
         }
 

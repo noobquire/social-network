@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Data;
 using SocialNetworkApi.Data.Models;
+using SocialNetworkApi.Extensions;
 using SocialNetworkApi.Middleware;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
-using SocialNetworkApi.Extensions;
+using System;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi
 {

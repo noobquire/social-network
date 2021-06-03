@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using SocialNetworkApi.Data.Models;
+﻿using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Services.Interfaces
 {

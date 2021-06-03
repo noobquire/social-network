@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using SocialNetworkApi.Data.Interfaces;
 using SocialNetworkApi.Data.Models;
@@ -10,6 +7,9 @@ using SocialNetworkApi.Services.Extensions;
 using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Services.Implementations
 {
@@ -36,7 +36,7 @@ namespace SocialNetworkApi.Services.Implementations
             await CheckIfProfileExists(profileId);
 
             var allPosts = (await _unitOfWork.Posts
-                .QueryAsync(p => 
+                .QueryAsync(p =>
                     p.ProfileId.ToString() == profileId))
                 .Select(p => p.ToDto());
             return PagedResponse<PostDto>.CreatePagedResponse(allPosts, filter);

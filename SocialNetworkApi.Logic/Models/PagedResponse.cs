@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SocialNetworkApi.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Services.Models
 {
@@ -25,7 +25,7 @@ namespace SocialNetworkApi.Services.Models
             var pagedMessages =
                 allDataArray.Skip((filter.PageNumber - 1) * filter.PageSize)
                     .Take(filter.PageSize);
-            var totalPages = (int) Math.Ceiling((double) allDataArray.Length / filter.PageSize);
+            var totalPages = (int)Math.Ceiling((double)allDataArray.Length / filter.PageSize);
 
             var pageNumber = filter.PageNumber > totalPages ? totalPages : filter.PageNumber;
             var response = new PagedResponse<T>(pagedMessages, pageNumber, filter.PageSize)

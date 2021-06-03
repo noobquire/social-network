@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using SocialNetworkApi.Data.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
-using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Services.Validation
 {
@@ -18,10 +18,10 @@ namespace SocialNetworkApi.Services.Validation
             }
 
             var extensions = Enum.GetNames(typeof(ImageType)).Select(e => e.ToLowerInvariant());
-            
+
             var extension = Path.GetExtension(file.FileName)?.Substring(1);
-            return !extensions.Contains(extension?.ToLowerInvariant()) ? 
-                new ValidationResult(GetErrorMessage()) 
+            return !extensions.Contains(extension?.ToLowerInvariant()) ?
+                new ValidationResult(GetErrorMessage())
                 : ValidationResult.Success;
         }
 

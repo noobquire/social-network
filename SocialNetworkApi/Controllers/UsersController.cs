@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Models;
 using SocialNetworkApi.Services.Exceptions;
@@ -10,6 +8,8 @@ using SocialNetworkApi.Services.Interfaces;
 using SocialNetworkApi.Services.Models;
 using SocialNetworkApi.Services.Models.Dtos;
 using SocialNetworkApi.Services.Validation;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace SocialNetworkApi.Controllers
 {
@@ -68,7 +68,7 @@ namespace SocialNetworkApi.Controllers
         {
             var user = await _usersService.GetByIdAsync(userId);
 
-            if(user == null)
+            if (user == null)
             {
                 var error = new ApiError("User with such Id was not found.", HttpStatusCode.NotFound);
                 return NotFound(error);
@@ -76,7 +76,7 @@ namespace SocialNetworkApi.Controllers
 
             var authResult = await _authorizationService.AuthorizeAsync(User, user, "SameOrAdminUser");
 
-            if(!authResult.Succeeded)
+            if (!authResult.Succeeded)
             {
                 var authError = new ApiError("You are not permitted to delete this user.", HttpStatusCode.BadRequest);
                 return StatusCode(StatusCodes.Status403Forbidden, authError);

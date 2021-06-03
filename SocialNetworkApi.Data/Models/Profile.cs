@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SocialNetworkApi.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SocialNetworkApi.Data.Interfaces;
 
 namespace SocialNetworkApi.Data.Models
 {
@@ -21,7 +21,7 @@ namespace SocialNetworkApi.Data.Models
 
         public virtual List<Post> Posts { get; set; }
 
-        [ForeignKey("AvatarId")] 
+        [ForeignKey("AvatarId")]
         public virtual Image Avatar { get; set; }
 
         public Guid? AvatarId { get; set; }

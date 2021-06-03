@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialNetworkApi.Data.Interfaces;
+using SocialNetworkApi.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SocialNetworkApi.Data.Interfaces;
-using SocialNetworkApi.Data.Models;
 
 namespace SocialNetworkApi.Data.Repositories
 {
@@ -32,10 +32,10 @@ namespace SocialNetworkApi.Data.Repositories
 
         public async Task<IEnumerable<TEntity>> GetPaginatedAsync(PaginationFilter filter)
         {
-           return await Context.Set<TEntity>()
-               .Skip((filter.PageNumber - 1) * filter.PageSize)
-               .Take(filter.PageSize)
-               .ToListAsync();
+            return await Context.Set<TEntity>()
+                .Skip((filter.PageNumber - 1) * filter.PageSize)
+                .Take(filter.PageSize)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<TEntity>> QueryAsync(Func<TEntity, bool> predicate)

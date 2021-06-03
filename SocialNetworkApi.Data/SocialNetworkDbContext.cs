@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Data.Models;
+using System;
 using System.Globalization;
 
 namespace SocialNetworkApi.Data
@@ -12,7 +12,7 @@ namespace SocialNetworkApi.Data
         public SocialNetworkDbContext(DbContextOptions<SocialNetworkDbContext> options) : base(options)
         {
         }
-        
+
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Image> Images { get; set; }
@@ -64,7 +64,7 @@ namespace SocialNetworkApi.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<Profile>()
-                .HasOne(p=> p.User)
+                .HasOne(p => p.User)
                 .WithOne(u => u.Profile)
                 .OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Profile>()
@@ -83,11 +83,11 @@ namespace SocialNetworkApi.Data
                 .Property(i => i.Type)
                 .HasConversion(
                     e => e.ToString().ToLowerInvariant(),
-                    e => (ImageType) Enum.Parse(typeof(ImageType), ti.ToTitleCase(e)));
+                    e => (ImageType)Enum.Parse(typeof(ImageType), ti.ToTitleCase(e)));
             builder.Entity<Image>()
                 .Property(i => i.OwnerId)
                 .IsRequired(false);
-            
+
             base.OnModelCreating(builder);
         }
     }
