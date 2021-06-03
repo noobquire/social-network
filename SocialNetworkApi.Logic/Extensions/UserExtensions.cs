@@ -13,9 +13,7 @@ namespace SocialNetworkApi.Services.Extensions
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Id = user.Id.ToString(),
-                Email = user.Email,
                 ProfileId = user.Profile?.Id.ToString(),
-                Username = user.UserName,
                 IsDeleted = user.IsDeleted
             };
         }

@@ -94,7 +94,6 @@ namespace SocialNetworkApi.IntegrationTests
             var result = JsonConvert.DeserializeObject<UserDto>(resultString);
 
             result.Id.Should().NotBeNullOrWhiteSpace();
-            result.Email.Should().Be(register.Email);
         }
 
         [Test]
