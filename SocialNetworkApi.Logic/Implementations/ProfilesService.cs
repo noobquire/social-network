@@ -65,10 +65,11 @@ namespace SocialNetworkApi.Services.Implementations
 
         public async Task<PagedResponse<ProfileDto>> GetAllAsync(PaginationFilter filter)
         {
-            var pagedProfiles = await _unitOfWork.Profiles.GetPaginatedAsync(filter);
             var totalRecords = await _unitOfWork.Profiles.CountAsync();
             var totalPages = (int)Math.Ceiling((double)totalRecords / filter.PageSize);
             var pageNumber = filter.PageNumber > totalPages ? totalPages : filter.PageNumber;
+            filter.PageNumber = pageNumber;
+            var pagedProfiles = await _unitOfWork.Profiles.GetPaginatedAsync(filter);
             var response = new PagedResponse<ProfileDto>(pagedProfiles.Select(p => p.ToDto()), pageNumber, filter.PageSize)
             {
                 TotalPages = totalPages,
