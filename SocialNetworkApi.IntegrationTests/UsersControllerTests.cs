@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +38,12 @@ namespace SocialNetworkApi.IntegrationTests
                         options.DefaultScheme = "Test";
                     }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
                             "Test", options => { });
+                    services.AddAuthorization(options =>
+                    {
+                        options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .Build();
+                    });
                     services.AddControllers().AddApplicationPart(typeof(Startup).Assembly);
                 });
             }).CreateClient();

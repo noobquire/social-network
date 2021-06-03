@@ -5,10 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using SocialNetworkApi.Data;
 using SocialNetworkApi.Data.Models;
 using SocialNetworkApi.Middleware;
@@ -90,7 +88,7 @@ namespace SocialNetworkApi
             CreateAdminUser(app.ApplicationServices).Wait();
         }
 
-        private void CreateDatabase(IApplicationBuilder app)
+        private static void CreateDatabase(IApplicationBuilder app)
         {
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             using var serviceScope = serviceScopeFactory.CreateScope();
@@ -115,7 +113,7 @@ namespace SocialNetworkApi
             var existingUser = await usersService.GetByEmailAsync(Configuration["Admin:Email"]);
             if (existingUser == null)
             {
-                var registerAdmin = new UserRegisterModel()
+                var registerAdmin = new UserRegisterModel
                 {
                     FirstName = Configuration["Admin:FirstName"],
                     LastName = Configuration["Admin:LastName"],

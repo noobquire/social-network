@@ -25,6 +25,7 @@ namespace SocialNetworkApi.Extensions
             services.AddScoped<IAuthorizationHandler, ChatAdminAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, ChatParticipantAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, SameMessageAuthorAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, EnabledUserAuthorizationHandler>();
             return services;
         }
 
@@ -51,6 +52,10 @@ namespace SocialNetworkApi.Extensions
         {
             services.AddAuthorization(options =>
             {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .AddRequirements(new EnabledUserRequirement())
+                    .Build();
                 options.AddPolicy("SameOrAdminUser", policy => policy.Requirements.Add(new SameUserRequirement(true)));
                 options.AddPolicy("SameUser", policy => policy.Requirements.Add(new SameUserRequirement(false)));
                 options.AddPolicy("ProfileOwner", policy => policy.Requirements.Add(new SameUserRequirement(false)));
