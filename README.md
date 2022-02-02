@@ -18,8 +18,7 @@ Features:
 * Create group chat with multiple users and send messages to it
 * Pagination for "Get All" requests
 * Basic user and chat administration
-* CI/CD pipeline with GitHub Actions with deployment to remote server  
-Deployed API can be accessed at http://oleksiilytvynov.tk:5000/swagger/index.html 
+* CI/CD pipeline with GitHub Actions with deployment to remote server
 
 Future ideas:
 * React SPA frontend
