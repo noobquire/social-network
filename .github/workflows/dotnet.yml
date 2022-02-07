@@ -31,7 +31,7 @@ jobs:
         host: ${{ secrets.REMOTE_HOST }}
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.REMOTE_SSH_KEY }}
-        script: sudo systemctl stop SocialNetworkApi
+        script: sudo systemctl stop social-network-api
     - name: Copy via ssh
       uses: appleboy/scp-action@master
       with:
@@ -46,5 +46,5 @@ jobs:
         host: ${{ secrets.REMOTE_HOST }}
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.REMOTE_SSH_KEY }}
-        script: sudo systemctl start SocialNetworkApi
+        script: sudo systemctl start social-network-api
         
