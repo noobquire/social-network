@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocialNetworkApi.Logic\SocialNetworkApi.Services.csproj" />
+    <ProjectReference Include="..\SocialNetworkApi.Services\SocialNetworkApi.Services.csproj" />
   </ItemGroup>
 
 </Project>
